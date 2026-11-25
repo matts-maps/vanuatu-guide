@@ -22,7 +22,7 @@ Open a command prompt in this folder.
 `.github/workflows/update-weather.yml` runs every hour and runs `scripts/update_weather.py`. The script reads Open-Meteo for Port Vila, Santo and Tanna and rewrites `data/weather.json`, and the workflow commits it when it changes. GitHub switches off scheduled workflows after 60 days without repository activity, so open Actions and re-enable it if the weather bar starts showing "out of date". The guide itself marks forecasts older than three hours as out of date.
 
 ## Updating the guide
-The source lives in the Claude project folder `cowork-projects/travel/2026-interactive-guide-vanuatu/build/`. After a change, run `python gen2.py` then `python make_site.py` there, copy everything inside the new `site/` folder over this repository (keep `data/weather.json` from here, not the older copy), then commit and push.
+Everything lives in this repository. The build scripts and raw source data are in `tools/` (see `tools/README.md`). Change `pois.py` or `template.html` in `tools/build/`, run `python gen2.py` there, check the page, then commit and push.
 
 ## Data and credits
 - Roads, rivers, villages, houses, hills and volcano heights: OpenStreetMap contributors, Open Database Licence, extracted by Geofabrik on 22 November 2026.

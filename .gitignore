@@ -1,2 +1,10 @@
 __pycache__/
 *.pyc
+
+# Claude notes and local build outputs (kept out of the public repository)
+CLAUDE.md
+TASKS.md
+memory/
+test.html
+tools/build/artifact/
+tools/build/gis_osm_*
