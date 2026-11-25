@@ -17,7 +17,7 @@ html,body{height:100%}
 body{margin:0;background:var(--ink);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.35;padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
 button,input{font:inherit;color:inherit}button{cursor:pointer}
 :focus-visible{outline:3px solid var(--green);outline-offset:2px}
-.app{display:grid;height:100%;grid-template-columns:clamp(310px,31vw,470px) 1fr;grid-template-rows:auto auto minmax(0,1fr);grid-template-areas:"head head" "wxbar wxbar" "side stage"}
+.app{display:grid;height:100%;grid-template-columns:clamp(310px,31vw,470px) 1fr;grid-template-rows:auto auto minmax(0,1fr) auto;grid-template-areas:"head head" "wxbar wxbar" "side stage" "foot foot"}
 .head{grid-area:head;display:flex;align-items:center;gap:16px;padding:10px 16px;background:var(--teal);border-bottom:5px solid var(--sun);flex-wrap:wrap}
 .badge{width:64px;height:64px;flex:none}
 .head h1{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(24px,3.6vw,38px);line-height:1;color:var(--sun);letter-spacing:.01em;text-wrap:balance;text-shadow:2px 2px 0 var(--teal-d)}
@@ -122,6 +122,11 @@ a{color:var(--red-d)}
 @media (max-width:600px){.head{padding:6px 12px;gap:10px}.badge{width:38px;height:38px}.head p{display:none}.head h1{font-size:26px}.head .meta{margin-left:auto}.chip-s{font-size:11px;padding:4px 8px}.legend,.cloud{display:none}.wx{right:62px}.wxi svg{width:52px;height:52px}.wxt{font-size:13px}.wxp{right:8px;top:84px}}
 .wxs{display:flex;gap:6px;margin:4px 0 8px}.wxs button{flex:1;min-height:44px;border:2px solid #4a3522;border-radius:10px;background:#fbf3df;font:inherit;cursor:pointer}.wxs button[aria-pressed="true"]{background:#e3b64f;font-weight:700}
 
+.foot{grid-area:foot;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:4px 14px;padding:4px 16px;background:var(--ink);color:var(--paper);border-top:4px solid var(--sun);font-size:15px;text-align:center}
+.foot a{color:var(--sun);display:inline-flex;align-items:center;min-height:44px;padding:0 4px}
+.foot a:hover{color:#fff}
+@media (orientation:portrait){.foot{order:5;padding-bottom:max(4px,env(safe-area-inset-bottom,0px))}}
+
 /* tap targets and print */
 .chip{min-height:44px;padding:4px 14px}
 .lay summary,.legend summary,.info summary{min-height:44px;display:flex;align-items:center}
@@ -200,7 +205,7 @@ a{color:var(--red-d)}
         <div class="info"><h2>Between the islands</h2><ul><li>Flights: Air Vanuatu connects Port Vila to Santo and Tanna with its larger planes, and smaller aircraft serve other islands such as Malekula, Ambrym, Ambae and Epi. Dashed blue lines on the map show routes listed by the airline and tourism office. Schedules change, so check before you plan.</li><li>Ferries: Vanuatu Ferry and Big Sista sail Port Vila to Malekula to Luganville, about 24 hours end to end. The MV Tauraken sails Port Vila to Erromango to Tanna, sometimes on to Aneityum. The MV Brisk and MV Tina serve Ambrym. Dashed green lines show these, drawn around the islands. Ports and end points are approximate.</li></ul></div>
         <div class="info"><h2>When to go</h2><ul><li>The drier months, roughly May to October, are most comfortable. The wetter cyclone season runs roughly November to April, so check forecasts and stay flexible.</li><li>Cruise ships crowd Blue Lagoon, Mele Cascades, Champagne Beach and Mystery Island. Go early or late. Land diving on Pentecost runs on Saturdays from about April to June.</li></ul></div>
         <div class="info"><h2>Cyclone season</h2><ul><li>Tropical cyclones can hit Vanuatu from about November to April, most often from January to March. Flights and ferries can be cancelled at short notice, so leave spare days and take travel insurance.</li><li>Follow official warnings from the Vanuatu Meteorology and Geo-hazards Department and ask your accommodation about local advice. Volcano alert levels for Tanna, Ambrym and Ambae are published by the same department.</li></ul></div>
-        <div class="info"><h2>Map data</h2><ul><li>Roads, rivers, villages and houses: © OpenStreetMap contributors (Open Database Licence), extracted by Geofabrik on 22 November 2026, including the island outlines. Weather: forecasts from an online weather service, refreshed about hourly.</li><li>Airport positions and codes: OurAirports (public domain). Port Vila main port position: the World Port Index published by the United States National Geospatial-Intelligence Agency. Other wharves, landings and marinas come from OpenStreetMap.</li><li>Place descriptions draw on the Vanuatu Tourism Office, Lonely Planet and information from Air Vanuatu and the ferry operators. The Ramada Resort by Wyndham Port Vila was added from a hotel listing because it is missing from OpenStreetMap. Distances and times from Port Vila are estimates. Hours, fees, tides and schedules change, so check locally.</li></ul></div>
+        <div class="info"><h2>Map data and credits</h2><ul><li>Map data © OpenStreetMap contributors. The full list of data sources, licences and credits is on the <a href="data-sources.html">data sources page</a>.</li></ul></div>
       </div>
     </section>
   </aside>
@@ -216,6 +221,7 @@ a{color:var(--red-d)}
     <div class="scale" id="scale"></div>
     <div class="attr">© OpenStreetMap contributors</div>
   </main>
+  <footer class="foot"><span>Created by <a href="https://matts-maps.github.io/portfolio/" target="_blank" rel="noopener">Fantail GIS</a> (2026)</span><span aria-hidden="true">·</span><a href="data-sources.html">Data sources</a></footer>
 </div>
 
 <section id="itin" hidden aria-label="Itinerary"><div class="itwrap"><div class="ithead"><h1>My itinerary</h1><button class="btn" id="itClose">Back to the map</button></div><div class="note" id="itcount"></div><div id="itlist"></div>

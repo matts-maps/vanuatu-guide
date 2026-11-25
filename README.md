@@ -28,7 +28,7 @@ The source lives in the Claude project folder `cowork-projects/travel/2026-inter
 - Roads, rivers, villages, houses, hills and volcano heights: OpenStreetMap contributors, Open Database Licence, extracted by Geofabrik on 22 November 2026.
 - Coastlines: Natural Earth (public domain) and the Global Self-consistent Hierarchical High-resolution Geography database.
 - Airports: OurAirports (public domain). Port Vila main port: World Port Index, United States National Geospatial-Intelligence Agency.
-- Weather: Open-Meteo.com, licence CC BY 4.0.
+- Weather: Open-Meteo.com, licence CC BY 4.0. The full list is on the data sources page (`data-sources.html`), linked from the footer.
 - Map fonts: Google Fonts (Caveat, Caveat Brush, Patrick Hand, Space Mono).
 
 No licence file is included yet. Choose one before inviting others to reuse the code.
