@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vanuatu: Interactive Guide</title>
+<meta name="description" content="A hand-drawn interactive map and guide to Vanuatu: things to do, dive sites, volcanoes, history, annual events, hotels, airports, day plans and a trip planner.">
+<meta name="theme-color" content="#2f5d6b">
+<meta property="og:title" content="Vanuatu: Interactive Guide"><meta property="og:description" content="A hand-drawn interactive map and guide to Vanuatu, starting on Port Vila and Efate."><meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23add9df' stroke='%232b1e16' stroke-width='3'/%3E%3Ccircle cx='44' cy='20' r='7' fill='%23f5b800'/%3E%3Cpath d='M32 54V30' stroke='%232b1e16' stroke-width='5' fill='none'/%3E%3Cpath d='M32 30c-8-8-17-4-19 0M32 30c8-8 17-4 19 0M32 30c-4-10-12-10-15-6M32 30c4-10 12-10 15-6' stroke='%232eb85c' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Caveat:wght@500;700&family=Patrick+Hand&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{--ink:#2b1e16;--ink-2:#4a382c;--sun:#e3b64f;--sun-d:#f5b800;--red:#c8553d;--red-d:#9c3b28;--teal:#2f5d6b;--teal-d:#1f414c;--sky:#add9df;--green:#2eb85c;--paper:#f7efd9;--paper-2:#efe2bc;--line:#e5d3a0;--muted:#6d5a49;
+ --f-display:"Caveat Brush","Comic Sans MS",cursive;--f-body:"Patrick Hand","Comic Sans MS",system-ui,sans-serif;--f-mono:"Space Mono","Courier New",monospace;color-scheme:light}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--ink);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.35;padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+button,input{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+.app{display:grid;height:100%;grid-template-columns:clamp(310px,31vw,470px) 1fr;grid-template-rows:auto auto minmax(0,1fr);grid-template-areas:"head head" "wxbar wxbar" "side stage"}
+.head{grid-area:head;display:flex;align-items:center;gap:16px;padding:10px 16px;background:var(--teal);border-bottom:5px solid var(--sun);flex-wrap:wrap}
+.badge{width:64px;height:64px;flex:none}
+.head h1{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(24px,3.6vw,38px);line-height:1;color:var(--sun);letter-spacing:.01em;text-wrap:balance;text-shadow:2px 2px 0 var(--teal-d)}
+.head p{margin:3px 0 0;color:#e6fbff;font-size:16px}
+.head .meta{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.chip-s{font-family:var(--f-mono);font-size:12px;font-weight:700;padding:6px 10px;border:2px solid var(--sun);color:var(--sun);border-radius:99px;white-space:nowrap}
+.chip-s.g{background:var(--green);border-color:var(--green);color:#fff}
+.side{grid-area:side;background:var(--paper);display:flex;flex-direction:column;min-height:0;min-width:0;border-right:5px solid var(--ink)}
+.modebar{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:4px solid var(--ink)}
+.modebar button{border:0;background:var(--paper-2);padding:12px 4px;font-family:var(--f-display);font-size:17px;letter-spacing:.03em;color:var(--ink-2)}
+.modebar button+button{border-left:4px solid var(--ink)}
+.modebar button[aria-pressed=true]{background:var(--red);color:#fff}
+.pane{display:flex;flex-direction:column;min-height:0;flex:1}.pane[hidden]{display:none!important}
+.tools{padding:12px 16px 8px;display:grid;gap:10px}
+.search{width:100%;padding:10px 12px;border:2px solid var(--ink);background:#fff;border-radius:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:3px solid var(--c,var(--ink));background:#fff;border-radius:99px;padding:1px 11px;font-size:15px;display:inline-flex;gap:6px;align-items:center}
+.chip i{width:11px;height:11px;border-radius:50%;background:var(--c)}
+.chip[aria-pressed=false]{opacity:.45;border-style:dashed}
+.lay{font-size:15px}.lay summary{cursor:pointer;font-family:var(--f-display);letter-spacing:.03em}.lay label{display:inline-block;margin:4px 12px 0 0}
+.tabs{display:flex;gap:6px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.tab{border:0;background:none;padding:4px 0;font-family:var(--f-display);font-size:17px;border-bottom:4px solid transparent;margin-right:12px}
+.tab[aria-selected=true]{border-color:var(--red)}
+.prog{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.list{overflow:auto;flex:1;min-height:0;padding:0 0 24px;margin:0;list-style:none}
+.it{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:start;padding:10px 16px;border:0;border-top:2px dashed var(--line);cursor:pointer;width:100%;text-align:left;background:none}
+.it:hover{background:var(--paper-2)}.it[aria-current=true]{background:#ffe27a}
+.num{width:38px;height:38px;border-radius:50%;background:var(--c,var(--red));color:#fff;display:grid;place-items:center;font-family:var(--f-display);font-size:18px;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.it b{display:block;font-family:var(--f-display);font-weight:400;font-size:18px;letter-spacing:.01em}
+.it small{display:block;color:var(--muted);font-size:15px}
+.th{background:#f3e8cf;border-color:#8a6a2e;margin-left:4px}
+.tk{background:#dff1f4;border-color:#3a9aa8;margin-left:4px}
+.tag{display:inline-block;font-size:13px;background:#fff;border:2px solid var(--line);padding:0 7px;border-radius:99px;margin-top:3px}
+.mark{font-size:18px;line-height:1.1;text-align:center}.lsy svg{width:24px;height:24px;stroke:var(--ink);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.75}
+.draw{margin:6px 16px 8px;padding:9px 12px;background:var(--sun);border:2px solid var(--ink);border-radius:12px;font-size:16px;box-shadow:3px 3px 0 var(--ink)}
+.empty{padding:20px 16px;color:var(--muted)}
+.info{padding:12px 16px;border-top:2px dashed var(--line)}.info h2{margin:0 0 4px;font-family:var(--f-display);font-weight:400;font-size:21px}.info ul{margin:4px 0 0;padding-left:20px}
+.tm{font-family:var(--f-mono);font-size:12px;font-weight:700;color:var(--red-d)}
+.stage{grid-area:stage;position:relative;min-height:0;min-width:0;background:var(--sky);overflow:hidden;touch-action:none;cursor:grab}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+#pinlayer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+.pin{position:absolute;margin:0;height:30px;border-radius:10px;background:var(--paper);color:var(--ink);border:2px solid var(--c,var(--red));font-family:var(--f-display);font-size:16px;display:flex;align-items:center;gap:6px;cursor:pointer;pointer-events:auto;padding:0 8px 0 3px;box-shadow:2px 2px 0 var(--ink);white-space:nowrap;line-height:1}
+.pin .n{width:22px;height:22px;border-radius:50%;background:var(--c,var(--red));color:#fff;display:grid;place-items:center;font-size:14px;flex:none}
+.pin .sy{display:grid;place-items:center;flex:none}
+.pin .sy svg{width:16px;height:16px;display:block;stroke:var(--ink);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pin .nm{font-family:var(--f-body);font-size:15px;max-width:190px;overflow:hidden;text-overflow:ellipsis}
+.pin:hover{filter:brightness(1.05);z-index:6}
+.pin.sel{background:var(--sun);z-index:7;box-shadow:3px 3px 0 var(--ink)}
+.pin.dim{opacity:.18;pointer-events:none}
+#leaders{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.pin.cluster{width:44px;height:44px;margin:-22px 0 0 -22px;font-size:20px;background:var(--red-d);color:#fff;border-radius:50%;border:4px double var(--ink);justify-content:center;padding:0}
+.ctl{position:absolute;right:12px;top:12px;display:grid;gap:6px;z-index:3}
+.ctl button{width:44px;height:44px;border:2px solid var(--ink);background:var(--paper);border-radius:12px;font-family:var(--f-display);font-size:22px;line-height:1;box-shadow:3px 3px 0 var(--ink)}
+.ctl button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.ctl button.w{width:auto;padding:0 10px;font-size:15px;height:38px}
+.legend{position:absolute;left:12px;top:12px;z-index:3;background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:8px 12px;font-size:15px;box-shadow:3px 3px 0 var(--ink);max-width:240px}
+.legend #leg>div{display:flex;align-items:center;gap:8px;margin:2px 0}
+.legend .sw{width:16px;height:16px;border-radius:50%;background:var(--c);border:2px solid var(--ink);flex:none}
+.legend summary{cursor:pointer;font-family:var(--f-display);font-size:16px}
+.legend .note{color:var(--muted);margin-top:4px;font-size:13px;line-height:1.25}
+.wxbar{grid-area:wxbar;display:flex;align-items:stretch;gap:10px;background:#f4e7c3;border-bottom:4px solid var(--ink);padding:6px 12px;min-width:0}
+.wxnow{display:flex;align-items:center;gap:8px;flex:none;max-width:48%}.wxnow .wxi{width:44px;height:44px;flex:none}.wxnow .wxi svg{width:100%;height:100%}
+.wxnow .tt{font-family:var(--f-display);font-size:28px;line-height:1}.wxnow .ll{display:flex;flex-direction:column;font-size:13px;line-height:1.2;min-width:0}.wxnow .ll b{font-size:15px}.wxnow .ll small{color:var(--muted)}
+.wxdays{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;-webkit-overflow-scrolling:touch}.wxdays::-webkit-scrollbar{display:none}
+.wxd{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:58px;padding:2px 4px;border-left:2px dashed var(--line);font-size:12px;line-height:1.15}.wxd .wi{width:28px;height:28px}.wxd .wi svg{width:100%;height:100%}.wxd b{font-size:12px}
+@media (max-width:600px){.wxnow{max-width:58%;gap:6px}.wxnow .ll small+small{display:none}.wxnow .tt{font-size:24px}.wxnow .wxi{width:34px;height:34px}.wxbar{padding:4px 10px}}
+.wx{position:absolute;right:68px;top:6px;z-index:3;background:none;border:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:0;cursor:pointer}
+.wxi svg{width:78px;height:78px;display:block}
+.wxt{font-family:var(--f-display);font-size:15px;background:var(--paper);border:2px solid var(--ink);border-radius:99px;padding:0 8px;margin-top:-8px;box-shadow:2px 2px 0 var(--ink);line-height:1.25}
+.wxp{position:absolute;right:68px;top:104px;z-index:9;width:min(290px,calc(100% - 24px));background:var(--paper);border:2px solid var(--ink);border-radius:14px;box-shadow:4px 4px 0 var(--ink);padding:10px 12px}
+.wxp[hidden]{display:none}
+.wxp h3{margin:0 0 4px;font-family:var(--f-display);font-weight:400;font-size:19px}
+.wxp .note{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.25}
+.wxr{display:grid;grid-template-columns:34px 1fr auto;gap:8px;align-items:center;padding:2px 0;border-top:2px dashed var(--line);font-size:15px}
+.wxr svg{width:32px;height:32px}
+.wxr b{font-weight:400}
+.wxr small{color:var(--muted)}
+.cloud{position:absolute;pointer-events:none;z-index:2;opacity:.95}
+.sw2{position:relative}.sres{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:30;background:var(--paper);border:2px solid var(--ink);border-radius:12px;box-shadow:4px 4px 0 var(--ink);max-height:300px;overflow:auto}.sres button{display:flex;width:100%;justify-content:space-between;gap:8px;text-align:left;background:none;border:0;border-bottom:1px dashed var(--line);padding:9px 12px;font:inherit;font-size:15px;cursor:pointer;color:var(--ink)}.sres button:last-child{border-bottom:0}.sres button:hover,.sres button:focus-visible{background:#f3e8cf}.sres small{color:#6b5a44;white-space:nowrap}.sres .none{padding:10px 12px;font-size:15px;color:#6b5a44}
+.stip{position:absolute;z-index:8;background:var(--paper);border:2px solid #7a4f9a;border-radius:12px;box-shadow:3px 3px 0 var(--ink);padding:8px 12px;font-size:15px;max-width:240px;transform:translate(-50%,calc(-100% - 16px))}.stip b{display:block;font-family:var(--f-display)}.stip small{display:block;color:#6b5a44}.stip a{font-size:14px}
+.card{position:absolute;left:12px;bottom:28px;z-index:10;width:min(410px,calc(100% - 24px));max-height:58%;overflow:auto;background:var(--paper);border:2px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:14px 16px}
+.card[hidden]{display:none!important}
+.card h2{margin:0 34px 2px 0;font-family:var(--f-display);font-weight:400;font-size:23px;line-height:1.1;text-wrap:balance}
+.card .sub{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-bottom:6px}
+.card p{margin:6px 0}
+.card dl{margin:8px 0;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:16px}
+.card dt{font-family:var(--f-display);color:var(--red-d);font-size:15px}.card dd{margin:0;overflow-wrap:anywhere}
+.card .x{position:absolute;right:8px;top:8px;width:32px;height:32px;border:2px solid var(--ink);background:#fff;border-radius:50%;font-family:var(--f-display);line-height:1}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.btn{border:2px solid var(--ink);background:#fff;border-radius:12px;padding:5px 12px;font-family:var(--f-display);font-size:15px;text-decoration:none;color:var(--ink);display:inline-block;box-shadow:2px 2px 0 var(--ink)}
+.btn.on{background:var(--green);color:#fff}.btn.pri{background:var(--red);color:#fff}
+.attr{position:absolute;right:8px;bottom:4px;z-index:2;font-size:12px;background:rgba(255,247,220,.9);padding:1px 7px;border-radius:6px;pointer-events:none;max-width:60%;text-align:right}
+.scale{position:absolute;left:12px;bottom:4px;z-index:2;font-size:13px;background:rgba(255,247,220,.9);padding:1px 7px;border-radius:6px;pointer-events:none}
+.scale b{display:block;height:5px;border:2px solid var(--ink);border-top:0;margin-top:1px}
+.status{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:#fff;border:2px solid var(--ink);border-radius:99px;padding:1px 14px;font-size:15px;display:none;z-index:6}
+a{color:var(--red-d)}
+@media (max-height:500px) and (orientation:landscape){.app{grid-template-columns:minmax(260px,350px) 1fr}.head{padding-top:6px;padding-bottom:6px}.head p,.wx,.cloud{display:none}.head h1{font-size:20px}.badge{width:36px;height:36px}.side{overflow-y:auto}.pane{flex:none}.list{overflow:visible}.legend{display:none}.card{width:min(330px,calc(100% - 16px));max-height:82%;left:8px;bottom:8px}}
+@media (orientation:portrait){.stage{transition:height .2s}body.compact .stage{height:clamp(170px,28dvh,300px)!important}}
+@media (max-width:600px){.chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;-webkit-overflow-scrolling:touch}.chips::-webkit-scrollbar{display:none}.chip{flex:none;white-space:nowrap}}
+@media (orientation:portrait){html,body{height:auto}.app{display:flex;flex-direction:column;height:auto}.head{order:0}.wxbar{order:1}.stage{order:2}.side{order:3}.stage{position:sticky;top:0;height:clamp(260px,46dvh,700px);z-index:6;border-bottom:5px solid var(--ink)}.side{border-right:0;min-height:50dvh}.list{overflow:visible}.head .meta{margin-left:0}.card{max-height:70%;left:8px;bottom:8px;width:min(440px,calc(100% - 16px))}}
+@media (max-width:600px){.head{padding:6px 12px;gap:10px}.badge{width:38px;height:38px}.head p{display:none}.head h1{font-size:26px}.head .meta{margin-left:auto}.chip-s{font-size:11px;padding:4px 8px}.legend,.cloud{display:none}.wx{right:62px}.wxi svg{width:52px;height:52px}.wxt{font-size:13px}.wxp{right:8px;top:84px}}
+.wxs{display:flex;gap:6px;margin:4px 0 8px}.wxs button{flex:1;min-height:44px;border:2px solid #4a3522;border-radius:10px;background:#fbf3df;font:inherit;cursor:pointer}.wxs button[aria-pressed="true"]{background:#e3b64f;font-weight:700}
+
+/* tap targets and print */
+.chip{min-height:44px;padding:4px 14px}
+.lay summary,.legend summary,.info summary{min-height:44px;display:flex;align-items:center}
+.lay label{min-height:44px;display:inline-flex;align-items:center;gap:8px;margin:0 14px 0 0}
+.lay input{width:24px;height:24px;margin:0}
+.tab{min-height:44px}
+.modebar button{min-height:44px}
+.legend .row{display:flex;align-items:center;gap:8px;margin:4px 0}
+.legend .sym{width:26px;height:16px;flex:none;display:inline-block;position:relative}
+.expb[hidden]{display:none}.expb{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}.expb .btn{min-height:44px}
+.plansel{display:flex;gap:6px;margin:0 0 8px}.plansel button{flex:1;min-height:44px;border:2px solid #4a3522;border-radius:10px;background:#fbf3df;font:inherit;cursor:pointer}.plansel button[aria-pressed="true"]{background:#e3b64f;font-weight:700}
+.pv{color:#5a4632}
+#itin{position:fixed;inset:0;z-index:100;background:var(--paper,#fbf3df);overflow:auto}#itin[hidden]{display:none}
+.itwrap{max-width:720px;margin:0 auto;padding:16px}.ithead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.ithead h1{margin:0;font-size:28px}
+.itrow{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:2px dashed #e3d3a8}.itrow .num{flex:none;width:34px;height:34px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;border:2px solid #4a3522}
+.itx{flex:1;display:flex;flex-direction:column;min-width:0}.itx small{color:#5a4632}.itb{display:flex;gap:4px}.itb button{width:44px;height:44px;border:2px solid #4a3522;border-radius:10px;background:#fff;font-size:18px;cursor:pointer}.itb button:disabled{opacity:.3}
+.acts2{display:grid;gap:8px;margin:16px 0}.acts2 .btn{min-height:48px;display:flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}#itmsg{min-height:24px;font-weight:600}#itmsg.bad{color:#a02020}#itmsg.ok{color:#2a6b3a}#itpr{display:none}
+.itopen{overflow:hidden}
+@media print{body>*:not(#itin){display:none!important}#itin{position:static!important;overflow:visible!important}.itwrap>*:not(#itpr){display:none!important}#itpr{display:block!important;font:14px/1.45 Georgia,serif;color:#000}#itpr h1{font-size:22px}#itpr li{margin:0 0 8px;break-inside:avoid}#itpr small{color:#444}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="head">
+    <svg class="badge" viewBox="0 0 100 100" role="img" aria-label="Port Vila badge">
+      <circle cx="50" cy="50" r="47" fill="#ffd23f" stroke="#2b1e16" stroke-width="4"/>
+      <circle cx="50" cy="50" r="40" fill="#6fd3ee" stroke="#2b1e16" stroke-width="3"/>
+      <path d="M12 66 Q31 54 50 66 T88 66 L88 76 Q50 98 12 76Z" fill="#2eb85c" stroke="#2b1e16" stroke-width="3"/>
+      <path d="M52 66 Q56 46 50 30" fill="none" stroke="#8a5a2b" stroke-width="5" stroke-linecap="round"/>
+      <path d="M50 30 Q32 22 24 34 M50 30 Q38 14 28 18 M50 30 Q68 20 78 32 M50 30 Q62 12 74 18" fill="none" stroke="#2eb85c" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="74" cy="24" r="8" fill="#ffd23f" stroke="#2b1e16" stroke-width="2.5"/>
+    </svg>
+    <div>
+      <h1>Vanuatu</h1>
+      <p>Your adventure guide · Port Vila, Efate and the islands beyond</p>
+    </div>
+    <div class="meta"><span class="chip-s g" id="countChip">places</span><span class="chip-s" id="islChip">islands</span></div>
+  </header>
+  <section class="wxbar" id="wxbar" aria-live="polite" aria-label="Weather forecast"></section>
+
+  <aside class="side">
+    <div class="modebar" role="group" aria-label="Guide sections">
+      <button data-mode="things" aria-pressed="true">Things to do</button>
+      <button data-mode="ring" aria-pressed="false">Day plans</button>
+      <button data-mode="plan" aria-pressed="false">Plan your trip</button>
+    </div>
+    <section class="pane" id="p-things">
+      <div class="tools">
+        <div class="sw2"><input class="search" id="q" type="search" placeholder="Search any place, beach, hotel, village…" aria-label="Search places" autocomplete="off"><div id="sres" class="sres" hidden></div></div>
+        <div class="chips" id="chips"></div>
+        <select class="search" id="isl" aria-label="Filter by island"></select>
+        <details class="lay"><summary>Map layers</summary>
+          <label><input type="checkbox" data-l="roads" checked> Roads</label>
+          <label><input type="checkbox" data-l="rivers" checked> Rivers &amp; lakes</label>
+          <label><input type="checkbox" data-l="buildings" checked> Houses</label>
+          <label><input type="checkbox" data-l="places" checked> Names</label>
+          <label><input type="checkbox" data-l="stays" checked> Hotels &amp; stays</label>
+          <label><input type="checkbox" data-l="trans" checked> Airports &amp; ports</label>
+          <label><input type="checkbox" data-l="routes"> Flights &amp; ferries</label>
+          <label><input type="checkbox" data-l="decor" checked> Doodles</label>
+        </details>
+        <div class="tabs"><div><button class="tab" id="tAll" aria-selected="true">All places</button><button class="tab" id="tTrail" aria-selected="false">My trail</button></div><span class="prog" id="prog"></span></div>
+        <div class="expb" id="expb" hidden><button class="btn pri" id="itBtn">Open itinerary page</button></div>
+      </div>
+      <div class="list" id="list"></div>
+    </section>
+    <section class="pane" id="p-ring" hidden>
+      <div class="plansel" id="plansel"></div>
+      <div class="draw" id="plandesc"></div>
+      <div class="list" id="ringlist"></div>
+    </section>
+    <section class="pane" id="p-plan" hidden>
+      <div class="list">
+        <div class="info"><h2>Getting there</h2><ul><li>Direct flights reach Port Vila in about 3 hours from Sydney or Brisbane and about 3.5 hours from Auckland.</li><li>Domestic flights from Port Vila reach Tanna, Espiritu Santo (Luganville), Malekula, Ambrym, Pentecost, Epi and the northern islands. Schedules change often and bad weather can delay flights, so build in spare days.</li></ul></div>
+        <div class="info"><h2>Getting around</h2><ul><li>On Efate, hire a car or quad bike in Port Vila and drive the ring road, or join a small-group island tour. On the outer islands, guesthouses usually arrange guides, trucks and boats.</li><li>Few shops along the loop: pack fruit and water.</li><li>Village attractions charge small entry fees in cash vatu. Fees change, so ask locally.</li></ul></div>
+        <div class="info"><h2>Between the islands</h2><ul><li>Flights: Air Vanuatu connects Port Vila to Santo and Tanna with its larger planes, and smaller aircraft serve other islands such as Malekula, Ambrym, Ambae and Epi. Dashed blue lines on the map show routes listed by the airline and tourism office. Schedules change, so check before you plan.</li><li>Ferries: Vanuatu Ferry and Big Sista sail Port Vila to Malekula to Luganville, about 24 hours end to end. The MV Tauraken sails Port Vila to Erromango to Tanna, sometimes on to Aneityum. The MV Brisk and MV Tina serve Ambrym. Dashed green lines show these, drawn around the islands. Ports and end points are approximate.</li></ul></div>
+        <div class="info"><h2>When to go</h2><ul><li>The drier months, roughly May to October, are most comfortable. The wetter cyclone season runs roughly November to April, so check forecasts and stay flexible.</li><li>Cruise ships crowd Blue Lagoon, Mele Cascades, Champagne Beach and Mystery Island. Go early or late. Land diving on Pentecost runs on Saturdays from about April to June.</li></ul></div>
+        <div class="info"><h2>Cyclone season</h2><ul><li>Tropical cyclones can hit Vanuatu from about November to April, most often from January to March. Flights and ferries can be cancelled at short notice, so leave spare days and take travel insurance.</li><li>Follow official warnings from the Vanuatu Meteorology and Geo-hazards Department and ask your accommodation about local advice. Volcano alert levels for Tanna, Ambrym and Ambae are published by the same department.</li></ul></div>
+        <div class="info"><h2>Map data</h2><ul><li>Roads, rivers, villages and houses: © OpenStreetMap contributors (Open Database Licence), extracted by Geofabrik on 22 November 2026, including the island outlines. Weather: forecasts from Open-Meteo.com (licence CC BY 4.0), refreshed about hourly.</li><li>Airport positions and codes: OurAirports (public domain). Port Vila main port position: the World Port Index published by the United States National Geospatial-Intelligence Agency. Other wharves, landings and marinas come from OpenStreetMap.</li><li>Place descriptions draw on the Vanuatu Tourism Office, Lonely Planet and information from Air Vanuatu and the ferry operators. The Ramada Resort by Wyndham Port Vila was added from a hotel listing because it is missing from OpenStreetMap. Distances and times from Port Vila are estimates. Hours, fees, tides and schedules change, so check locally.</li></ul></div>
+      </div>
+    </section>
+  </aside>
+
+  <main class="stage" id="stage">
+    <canvas id="cv" role="img" aria-label="Hand-drawn style map of Vanuatu with numbered places to visit"></canvas>
+    <div id="pinlayer"></div>
+    
+    <div class="status" id="status">Loading…</div>
+    <div class="ctl"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zefate" class="w" aria-label="Fit Efate">Efate</button><button id="zall" class="w" aria-label="Fit Vanuatu">All</button></div>
+    <div class="legend"><details><summary>What's on the map</summary><div id="leg"></div><div class="note">Drawn by hand, not to scale. Zoom in for real roads, rivers and houses.</div></details></div>
+    <article class="card" id="card" hidden></article>
+    <div class="scale" id="scale"></div>
+    <div class="attr">© OpenStreetMap contributors</div>
+  </main>
+</div>
+
+<section id="itin" hidden aria-label="Itinerary"><div class="itwrap"><div class="ithead"><h1>My itinerary</h1><button class="btn" id="itClose">Back to the map</button></div><div class="note" id="itcount"></div><div id="itlist"></div>
+<div class="acts2"><a class="btn pri" id="itGmap" target="_blank" rel="noopener" href="#">Route in Google Maps</a><button class="btn" id="itCsv">Save as CSV (spreadsheet)</button><button class="btn" id="itGpx">Save GPX for a phone app (zip)</button><button class="btn" id="itHtml">Save printable page</button><button class="btn" id="itPrint">Print</button></div><div id="itmsg" role="status"></div><div id="itpr"></div></div></section>
+<script>
+const D={"cats": {"water": {"n": "Swim & waterfalls", "c": "#0072B2"}, "beach": {"n": "Beaches & islands", "c": "#E69F00"}, "culture": {"n": "Culture & history", "c": "#D55E00"}, "food": {"n": "Food, market & kava", "c": "#009E73"}, "sea": {"n": "Snorkel & dive", "c": "#56B4E9"}, "vol": {"n": "Volcanoes & hikes", "c": "#A63D2F"}, "hist": {"n": "History & Second World War", "c": "#8A6A2E"}, "base": {"n": "Getting around", "c": "#555555"}, "events": {"n": "Annual events", "c": "#B0457A"}}, "pois": [{"id": "market", "n": "Port Vila Central Market", "c": "food", "lon": 168.314, "lat": -17.7402, "t": "1–2 hours", "d": "The central market is where Port Vila shops, eats and gossips: fresh produce, local fruit, kava roots and handicrafts. Go early, when it is busiest and the produce is best.", "tip": "Carry small notes in vatu; stalls rarely have change for large bills.", "isl": "Efate", "i": 1}, {"id": "museum", "n": "Vanuatu Cultural Centre & National Museum", "c": "culture", "lon": 168.315, "lat": -17.7395, "t": "1–1.5 hours", "d": "The best single introduction to Vanuatu: traditional carvings, slit drums, sand drawing and the stories of the islands, in the middle of town.", "tip": "Do this first, before the villages and custom sites, so the rest makes more sense. Pin position is approximate.", "approx": true, "h": "Kastom & independence", "x": "hist", "isl": "Efate", "i": 2}, {"id": "seafront", "n": "Iririki Island & the seafront", "c": "food", "lon": 168.3098, "lat": -17.7435, "t": "Half a day", "d": "The Port Vila Seafront, opened in 2017, links the main waterfront attractions. Walk it for harbour views, waterfront restaurants and sundowners, and look across to Iririki Island.", "tip": "Good evening plan after a day on the ring road.", "isl": "Efate", "i": 3}, {"id": "nakamal", "n": "Kava bars (nakamals)", "c": "food", "lon": 168.3115, "lat": -17.7338, "t": "Evening", "d": "Kava is the local specialty and OpenStreetMap lists dozens of nakamals around town. Drink a shell, sit quietly and chat with locals; it is a social ritual, not a party drink.", "tip": "It numbs the lips and mouth. Start with one shell, and do not drive afterwards.", "isl": "Efate", "i": 4}, {"id": "erakor", "n": "Erakor Island & lagoon", "c": "beach", "lon": 168.3097, "lat": -17.7736, "t": "Half a day", "d": "A short boat hop from the south shore for a relaxed beach and lagoon day close to town, with calm swimming and snorkelling.", "tip": "Easy half-day if the weather is poor on the east coast.", "k": "Snorkel", "isl": "Efate", "i": 5}, {"id": "ekasup", "n": "Ekasup Cultural Village", "c": "culture", "lon": 168.329, "lat": -17.7595, "t": "Half a day", "d": "A cultural village just south of Port Vila where hosts share traditional dance, food and ways of life.", "tip": "Book ahead so a visit fits their programme.", "isl": "Efate", "i": 6}, {"id": "pango", "n": "Pango Point lighthouse", "c": "beach", "lon": 168.2596, "lat": -17.7813, "t": "1 hour", "d": "The south-western tip of the Pango peninsula, with a lighthouse and sea views. A good end-of-day stop for the sunset side of the island.", "tip": "Combine with a swim at Pango Beach on the way.", "isl": "Efate", "i": 7}, {"id": "hideaway", "n": "Hideaway Island Marine Sanctuary", "c": "sea", "lon": 168.2633, "lat": -17.6965, "t": "Half a day", "d": "Just offshore from Mele Beach, one of Vila's favourite spots for snorkelling and diving. It is also home to the world's only underwater post office, so you can send a postcard from the sea.", "tip": "Bring your own snorkel and fins to save hire costs; postcards are sold on the island.", "k": "Dive & snorkel", "isl": "Efate", "i": 8}, {"id": "mele", "n": "Mele Cascades", "c": "water", "lon": 168.2594, "lat": -17.676, "t": "1.5–2 hours", "d": "A series of clear aquamarine pools beneath a 35-metre waterfall, about a half-hour drive from Port Vila. Walk up through the pools for the views from the top.", "tip": "Go first thing, before the cruise-ship crowds, and wear shoes you can get wet.", "isl": "Efate", "i": 9}, {"id": "roimata", "n": "Chief Roi Mata's Domain", "c": "culture", "lon": 168.2029, "lat": -17.6382, "t": "Full day (guided)", "d": "A World Heritage Site covering the burial and living places of a 17th-century paramount chief, spread across Lelepa, Retoka and the north-west coast of Efate.", "tip": "The pin is at Mangaliliu village on the mainland, where visits are usually arranged; the sites themselves are on nearby islets. Visit with a local guide so the sites are explained and the community benefits.", "approx": true, "h": "World Heritage", "x": "hist", "isl": "Efate", "i": 10}, {"id": "havannah", "n": "Havannah Harbour", "c": "sea", "lon": 168.2759, "lat": -17.5664, "t": "Half a day", "d": "A sheltered harbour on the north-west coast for snorkelling with great visibility. Emua Wharf is about an hour's drive from Port Vila, and boats cross to nearby islands.", "tip": "Allow time for a long seafood lunch at one of the beach bars.", "k": "Snorkel", "isl": "Efate", "i": 11}, {"id": "rarru", "n": "Rarru (Rentapao) Cascades", "c": "water", "lon": 168.4542, "lat": -17.7901, "t": "1 hour", "d": "A quieter waterfall near Rentapao on the south-east side of the ring road, a good cool-off on the way back to town after the east coast. Pin position is approximate.", "tip": "Often pairs well with a long lunch on the ring road.", "approx": true, "isl": "Efate", "i": 12}, {"id": "bluelagoon", "n": "Blue Lagoon (Eton)", "c": "water", "lon": 168.556, "lat": -17.7614, "t": "1.5–2 hours", "d": "One of the largest swimming holes on Efate: roughly 70 metres long, 30 metres wide and 6 metres deep, ringed by twisted trees with rope swings. Picnic tables, changing rooms and toilets are on site.", "tip": "It is busiest at midday; an afternoon visit is usually calmer. Pay the village entry fee in cash.", "isl": "Efate", "i": 13}, {"id": "eton", "n": "Eton Beach", "c": "beach", "lon": 168.5618, "lat": -17.7382, "t": "1–2 hours", "d": "A brochure-style stretch of white sand with calm water, child-friendly rock pools and a freshwater stream feeding a lagoon, about a 40-minute drive from Port Vila.", "tip": "Entry goes to Eton Village to maintain the beach; camping is possible for a small fee.", "k": "Snorkel", "isl": "Efate", "i": 14}, {"id": "airport", "n": "Bauerfield International Airport", "c": "base", "lon": 168.3181, "lat": -17.699, "t": "Arrival", "d": "Where you land. Direct flights take about three hours from Sydney or Brisbane and about 3.5 hours from Auckland. From here you can also connect to other islands by domestic flight.", "tip": "Arrange a transfer or hire car in advance, especially on cruise-ship days.", "isl": "Efate", "i": 15}, {"id": "yasur", "n": "Mount Yasur volcano", "c": "vol", "isl": "Tanna", "lon": 169.4483, "lat": -19.5283, "t": "Evening tour", "d": "One of the most accessible active volcanoes in the world. Tours drive to the ash plain and walk up to the crater rim, best at dusk when the eruptions glow.", "tip": "How close you can go depends on the volcano alert level, so ask your tour operator or accommodation first.", "approx": false, "h": "361 m high", "i": 16}, {"id": "portres", "n": "Port Resolution", "c": "beach", "isl": "Tanna", "lon": 169.5035, "lat": -19.5248, "t": "Half a day", "d": "A sheltered bay and village on the south-east coast, with black-sand beaches, yacht anchorage and simple guesthouses near the volcano.", "tip": "Combine with Yasur: staying here puts you close to the crater.", "approx": false, "i": 17}, {"id": "yakel", "n": "Yakel kastom village", "c": "culture", "isl": "Tanna", "lon": 169.44, "lat": -19.515, "t": "Half a day", "d": "One of the best-known kastom villages in Vanuatu, where residents keep traditional dress, dance and customs. Visits are arranged with the community.", "tip": "Pin position is approximate. Visit with a guide or your accommodation and ask about fees and photos.", "approx": true, "i": 18}, {"id": "tannablue", "n": "Tanna Blue Hole", "c": "water", "isl": "Tanna", "lon": 169.22563, "lat": -19.43662, "t": "1–2 hours", "d": "A natural swimming hole on the north-west of the island, listed in OpenStreetMap as a blue hole. Separate from the Blue Cave, which is reached by boat.", "tip": "Pin position is approximate. Ask locally about access, tides and fees.", "approx": true, "i": 19}, {"id": "champagne", "n": "Champagne Beach", "c": "beach", "isl": "Espiritu Santo", "lon": 167.11981, "lat": -15.14375, "t": "Half a day", "d": "A famous white-sand beach on Santo's north-east coast, regularly named among the best beaches in the world. Clear shallow water and a calm bay.", "tip": "Cruise ships can fill it; go early. A small entry fee is usual.", "approx": false, "k": "Snorkel", "i": 20}, {"id": "luganville", "n": "Luganville", "c": "base", "isl": "Espiritu Santo", "lon": 167.1784, "lat": -15.5121, "t": "Arrival", "d": "Santo's main town and gateway, with an airport, restaurants and dive shops. The base for Million Dollar Point, the Coolidge and the blue holes.", "tip": "Domestic flights connect to Port Vila. Buses run in town.", "approx": false, "i": 21}, {"id": "milliondollar", "n": "Million Dollar Point", "c": "sea", "isl": "Espiritu Santo", "lon": 167.244, "lat": -15.5245, "t": "Half a day", "d": "A snorkel and dive site where the US military dumped vehicles and equipment into the sea at the end of the Second World War.", "tip": "Pin position is approximate. Go with a dive operator or ask in Luganville.", "approx": true, "h": "Second World War", "x": "hist", "k": "Dive & snorkel", "i": 22}, {"id": "coolidge", "n": "SS President Coolidge wreck", "c": "sea", "isl": "Espiritu Santo", "lon": 167.238, "lat": -15.533, "t": "Full day", "d": "A huge Second World War troopship lost in 1942 after hitting mines, now one of the world's great accessible wreck dives, reached from the shore.", "tip": "Pin position is approximate. Wreck diving needs a qualified operator.", "approx": true, "h": "Second World War", "x": "hist", "k": "Dive", "i": 23}, {"id": "matevulu", "n": "Matevulu Blue Hole", "c": "water", "isl": "Espiritu Santo", "lon": 167.1746, "lat": -15.3774, "t": "1–2 hours", "d": "A deep, clear freshwater swimming hole in the forest with rope swings and platforms. One of several blue holes on the east coast of Santo.", "tip": "Take a snorkel, mask and sunscreen. Arrive early to avoid cruise crowds.", "approx": false, "i": 24}, {"id": "nanda", "n": "Nanda Blue Hole", "c": "water", "isl": "Espiritu Santo", "lon": 167.1702, "lat": -15.3139, "t": "1 hour", "d": "A quieter blue hole north of Matevulu, with turquoise water and a small canoe to paddle.", "tip": "Entry fees vary; carry small cash.", "approx": false, "i": 25}, {"id": "riri", "n": "Riri Blue Hole", "c": "water", "isl": "Espiritu Santo", "lon": 167.1812, "lat": -15.3909, "t": "1 hour", "d": "A small, peaceful blue hole close to Matevulu, easy to combine into a blue-hole day.", "tip": "Combine with Matevulu and Nanda.", "approx": false, "i": 26}, {"id": "portolry", "n": "Port Olry", "c": "beach", "isl": "Espiritu Santo", "lon": 167.0706, "lat": -15.0425, "t": "Half a day", "d": "A quiet village beach on Santo's north-east coast, with a calm bay, a few guesthouses and a base for Champagne Beach.", "tip": "A good, slower alternative to town.", "approx": false, "i": 27}, {"id": "tabwemasana", "n": "Mount Tabwemasana (Pic Santo)", "c": "vol", "isl": "Espiritu Santo", "lon": 166.75612, "lat": -15.36304, "t": "2–3 days", "d": "The highest peak in Vanuatu, in the wild west of Santo. A guided multi-day trek through forest with village stays on the way.", "tip": "Hire a local guide and arrange it well ahead. Expect rain.", "approx": false, "h": "1,879 m, highest in Vanuatu", "i": 28}, {"id": "marum", "n": "Marum and Benbow volcanoes", "c": "vol", "isl": "Ambrym", "lon": 168.1364, "lat": -16.2494, "t": "2–3 days", "d": "Ambrym, the Black Island, has two lava lakes and a huge caldera. A guided hike to the rim is one of the great volcano trips in the Pacific.", "tip": "Hikes are arranged through guesthouses. Check volcano alert levels before you go.", "approx": false, "h": "Marum 1,270 m, Benbow 1,159 m", "i": 29}, {"id": "ranon", "n": "Ranon (Ambrym)", "c": "culture", "isl": "Ambrym", "lon": 168.1174, "lat": -16.1451, "t": "Overnight", "d": "The north coast village and starting point for volcano hikes, with beach bungalows and the Rom dance and festivals.", "tip": "Bungalow owners arrange tours; book ahead.", "approx": false, "i": 30}, {"id": "landdive", "n": "Land diving (Naghol), Pangi", "c": "events", "isl": "Pentecost", "lon": 168.1929, "lat": -15.9472, "t": "Saturdays, April–June", "d": "The ritual that inspired bungee jumping. Men jump from a tall tower with liana vines tied to their ankles in the south of Pentecost.", "tip": "Only held on Saturdays in the yam harvest season. Check dates and fees locally.", "approx": false, "h": "April to June, Saturdays", "i": 31}, {"id": "lakatoro", "n": "Lakatoro & the Nambas", "c": "culture", "isl": "Malekula", "lon": 167.4185, "lat": -16.1068, "t": "1–2 days", "d": "The administrative centre of Malekula, the base for visiting Big Nambas and Small Nambas communities, with a market and guesthouses.", "tip": "There are no sealed roads. Guides help with village visits.", "approx": false, "i": 32}, {"id": "southwestbay", "n": "South West Bay", "c": "culture", "isl": "Malekula", "lon": 167.4468, "lat": -16.4806, "t": "1 day", "d": "A coastal base in the south-west for Small Nambas cultural visits and boat trips.", "tip": "Pin position is approximate. Ask a local guide about visits.", "approx": true, "i": 33}, {"id": "lamap", "n": "Lamap & Maskelyne Islands", "c": "culture", "isl": "Malekula", "lon": 167.8076, "lat": -16.4211, "t": "1–2 days", "d": "The south-east gateway to the Maskelyne Islands, famous for the two-day canoe race and arts festival each July.", "tip": "Pin position is approximate. Transport is by small boat and truck.", "approx": true, "i": 34}, {"id": "lamenbay", "n": "Lamen Bay", "c": "sea", "isl": "Epi", "lon": 168.1677, "lat": -16.5922, "t": "Half a day", "d": "A shallow bay on Epi that is known for dugongs and turtles you can snorkel near. Quiet beaches and basic bungalows.", "tip": "Look from the water without chasing the animals.", "approx": false, "k": "Snorkel", "i": 35}, {"id": "ambae", "n": "Ambae (Aoba) volcano", "c": "vol", "isl": "Ambae", "lon": 167.8379, "lat": -15.3713, "t": "Check first", "d": "A large volcanic island with crater lakes, forest and traditional villages. Eruptions in 2017 and 2018 led to evacuation.", "tip": "Check the current volcano alert and local access before planning a visit.", "approx": true, "h": "Lombenben 1,496 m", "i": 36}, {"id": "lopevi", "n": "Lopevi volcano", "c": "vol", "isl": "Lopevi", "lon": 168.3453, "lat": -16.5103, "t": "Boat or flight view", "d": "A near-perfect volcanic cone island that is best viewed from the sea or from a domestic flight between islands.", "tip": "Active volcano: there is no landing. Look from a safe distance.", "approx": true, "h": "1,430 m high", "i": 37}, {"id": "sola", "n": "Sola & the Banks Islands", "c": "culture", "isl": "Banks Islands", "lon": 167.5497, "lat": -13.8748, "t": "3+ days", "d": "Far north, the Banks Islands have remote villages, volcanic landscapes and the Rah snake dance, a rare traditional performance.", "tip": "Reached by domestic flight to Sola. Allow slack for weather.", "approx": false, "i": 38}, {"id": "gaua", "n": "Gaua (Santa Maria)", "c": "vol", "isl": "Banks Islands", "lon": 167.5108, "lat": -14.3065, "t": "3+ days", "d": "A round volcanic island with a crater lake and active volcano in the Banks Islands, little visited and off the standard routes.", "tip": "Pin position is the island centre. Ask guesthouses about guides.", "approx": true, "h": "Mount Garet 797 m", "i": 39}, {"id": "mystery", "n": "Mystery Island", "c": "beach", "isl": "Aneityum", "lon": 169.7747, "lat": -20.2486, "t": "Half a day", "d": "A small uninhabited island off Aneityum, a favourite cruise-ship stop with white sand, clear water and snorkelling.", "tip": "Cruise days are busiest. Ask Aneityum villagers about quieter days.", "approx": true, "k": "Snorkel", "i": 40}, {"id": "anelghowhat", "n": "Anelghowhat Bay", "c": "culture", "isl": "Aneityum", "lon": 169.7914, "lat": -20.2273, "t": "1 day", "d": "The main village and bay on Aneityum, the southernmost inhabited island, with a green, welcoming landscape and few visitors.", "tip": "Reached by domestic flight and boat; allow extra days.", "approx": false, "i": 41}, {"id": "erromango", "n": "Erromango", "c": "culture", "isl": "Erromango", "lon": 169.1331, "lat": -18.7672, "t": "Several days", "d": "A large, rarely visited island with forest, rivers and historic mission sites.", "tip": "Pin position is the island centre. Ask Air Vanuatu or local operators about access.", "approx": true, "i": 42}, {"id": "tranquillity", "n": "Port Vila harbour wreck dives", "c": "sea", "isl": "Efate", "lon": 168.3133, "lat": -17.7375, "t": "Half a day", "d": "Port Vila has more than 20 dive sites close to town, and operators collect divers from their hotels. The harbour wrecks include the Star of Russia, a three-masted ship from 1874 lying in about 33 metres of water with its hull intact. The pin marks the Tranquillity Dive base in OpenStreetMap, not the wrecks themselves.", "tip": "Wrecks are for experienced divers; beginners have shallower reefs such as Hideaway Island.", "approx": true, "k": "Dive", "i": 43}, {"id": "lelepa", "n": "Lelepa Island reefs", "c": "sea", "isl": "Efate", "lon": 168.2088, "lat": -17.5934, "t": "Half a day", "d": "A small island off the north-west coast of Efate with reefs that are good for snorkelling, and the usual kayak and village-visit day trips. Pin is at the middle of the island.", "tip": "Paddle or take a boat from the north-west coast; take your own snorkel gear.", "approx": true, "k": "Snorkel", "i": 44}, {"id": "ngunapele", "n": "Nguna and Pele reefs", "c": "sea", "isl": "Efate", "lon": 168.38, "lat": -17.47, "t": "Day trip", "d": "Two small islands off Efate's north coast, reached by boat from the Emua or Mangaliliu side. Their reefs are a quiet snorkelling option away from Port Vila. Pin sits in the channel between the islands.", "tip": "Arrange the boat and a village host in advance.", "approx": true, "k": "Snorkel", "i": 45}, {"id": "aorefan", "n": "Aore Channel fan garden", "c": "sea", "isl": "Espiritu Santo", "lon": 167.19, "lat": -15.545, "t": "Half a day", "d": "Drift dives in the channel between Luganville and Aore Island pass sea fans on a vertical wall (the Fan Garden or Aore Wall) and a gentler reef at Cindy's Reef. Pin is in the middle of the channel, not on a surveyed site.", "tip": "Dive with an operator from Luganville; currents make the timing important.", "approx": true, "k": "Dive", "i": 46}, {"id": "tutuba", "n": "Tutuba Island reef", "c": "sea", "isl": "Espiritu Santo", "lon": 167.2764, "lat": -15.5662, "t": "Half a day", "d": "A fringing reef off the south-east of Santo that dive operators use for relaxed coral dives and snorkelling. Pin is at the middle of the island.", "tip": "Go with a Luganville operator who knows the best section for the tide.", "approx": true, "k": "Dive & snorkel", "i": 47}, {"id": "uripiv", "n": "Uripiv Island reef", "c": "sea", "isl": "Malekula", "lon": 167.44, "lat": -16.085, "t": "Half a day", "d": "Just off Malekula's east coast, Uripiv's reef has been called one of Vanuatu's best and is a conservation area. Snorkel from the island with permission from the village. Pin position is approximate.", "tip": "Ask the village first, and take a guide for the best section.", "approx": true, "k": "Snorkel", "i": 48}, {"id": "sp_ww2_museum", "n": "South Pacific Second World War Museum", "c": "hist", "isl": "Espiritu Santo", "lon": 167.1732, "lat": -15.5156, "t": "1–2 hours", "d": "A museum in Luganville about the Second World War in the South Pacific. Santo held the largest American base in the islands, code-named Base Button, started in 1942, with tens of thousands of servicemen passing through.", "tip": "Pair it with Million Dollar Point and the Coolidge wreck for the full wartime story.", "approx": false, "h": "WWII", "x": "hist", "i": 49}, {"id": "efate_ww2", "n": "Efate wartime museum and relics", "c": "hist", "isl": "Efate", "lon": 168.4125, "lat": -17.5366, "t": "1 hour", "d": "Efate was also a major Allied base. OpenStreetMap shows a small museum of wartime relics on the north-east side, and an old landing strip a little further east. Pin position is approximate: OpenStreetMap places two museum points here about 600 metres apart.", "tip": "Ask locally about opening times before you drive out.", "approx": true, "h": "WWII", "x": "hist", "i": 50}, {"id": "havannah_ww2", "n": "Port Havannah war museum", "c": "hist", "isl": "Efate", "lon": 168.2598, "lat": -17.5687, "t": "1 hour", "d": "A small Second World War museum near Havannah Harbour on the north-west coast, so it fits easily into a snorkel-and-lunch day there.", "tip": "Combine with Havannah Harbour and check opening times first.", "approx": true, "h": "WWII", "x": "hist", "i": 51}, {"id": "warmemorial", "n": "Port Vila war memorial", "c": "hist", "isl": "Efate", "lon": 168.3155, "lat": -17.7359, "t": "15 minutes", "d": "The Australian and New Zealand war memorial in the middle of Port Vila, a quiet stop on the way between the market and the museum.", "tip": "On foot from the central market.", "approx": false, "h": "Memorial", "x": "hist", "i": 52}, {"id": "queiros", "n": "Queirós landing memorial", "c": "hist", "isl": "Espiritu Santo", "lon": 166.9396, "lat": -15.1652, "t": "30 minutes", "d": "A memorial on Santo's north coast named for the Spanish explorer Pedro Fernandes de Queirós, who came to these islands in 1606. It is one of the earliest European contacts in Vanuatu.", "tip": "Remote, so combine it with a day around Port Olry and Champagne Beach.", "approx": true, "h": "1606", "x": "hist", "i": 53}, {"id": "missionhouse", "n": "Mission house ruins, Erakor", "c": "hist", "isl": "Efate", "lon": 168.3088, "lat": -17.775, "t": "30 minutes", "d": "Ruins on Erakor Island that OpenStreetMap tags as an archaeological site and names as a mission house. They are a reminder of the early church history on Efate.", "tip": "Reached by the Erakor Island boat; ask staff to point out the ruins.", "approx": true, "h": "Colonial era", "x": "hist", "i": 54}, {"id": "johnfrum", "n": "John Frum Day, Lamakara", "c": "events", "isl": "Tanna", "lon": 169.47, "lat": -19.5245, "t": "Every year", "d": "Followers of the John Frum movement gather at Lamakara on the east side of Mount Yasur for a day of song, dance and a flag-raising to honour the figure they call John Frum.", "tip": "Dates move from year to year. Check the Vanuatu Tourism Office events calendar before you book. Ask the Tanna visitor centre about visiting respectfully.", "approx": true, "h": "15 February", "x": "hist", "i": 55}, {"id": "independence", "n": "Independence Day, Port Vila", "c": "events", "isl": "Efate", "lon": 168.319, "lat": -17.7385, "t": "Every year", "d": "Port Vila marks independence from Britain and France on 30 July 1980 with a parade, a flag-raising at Independence Park, dancing, canoes in the harbour and food stalls. Bands play around town through the week.", "tip": "Dates move from year to year. Check the Vanuatu Tourism Office events calendar before you book.", "approx": true, "h": "30 July", "x": "hist", "i": 56}, {"id": "festnapuan", "n": "Fest'Napuan music festival, Saralana Park", "c": "events", "isl": "Efate", "lon": 168.3105, "lat": -17.744, "t": "Three nights", "d": "A free, three-night music festival at Saralana Park with local and regional bands. It ran in September in 2025, and in earlier years in October or November.", "tip": "Dates move from year to year. Check the Vanuatu Tourism Office events calendar before you book.", "approx": true, "h": "September to November", "x": "hist", "i": 57}, {"id": "oceanswim", "n": "Vanuatu Ocean Swim, Iririki Island", "c": "events", "isl": "Efate", "lon": 168.309, "lat": -17.7462, "t": "Every year", "d": "A swim of 3.2 km or 1.5 km around Iririki Island, a few hundred metres off the Port Vila waterfront. Spectators watch from the seafront.", "tip": "Dates move from year to year. Check the Vanuatu Tourism Office events calendar before you book.", "approx": true, "h": "June", "x": "hist", "i": 58}, {"id": "vilaevents", "n": "Town events, Port Vila", "c": "events", "isl": "Efate", "lon": 168.315, "lat": -17.742, "t": "Several dates a year", "d": "Fete de la Musique on 21 June, Unity Day on 29 November (a parade in traditional dress with groups from many islands) and Christmas in the Park in early to mid December all happen in central Port Vila.", "tip": "Dates move from year to year. Check the Vanuatu Tourism Office events calendar before you book.", "approx": true, "h": "21 June, 29 November, December", "x": "hist", "i": 59}, {"id": "roots", "n": "Back to My Roots festival, Ambrym", "c": "events", "isl": "Ambrym", "lon": 168.11, "lat": -16.17, "t": "Every year", "d": "A three-day cultural event of traditional dance, games and storytelling in a village on Ambrym. Some years it has been listed in Port Vila instead, so confirm the venue.", "tip": "Dates move from year to year. Check the Vanuatu Tourism Office events calendar before you book. The pin is placed on north Ambrym; the exact village is not confirmed.", "approx": true, "h": "August", "x": "hist", "i": 60}, {"id": "nalawan", "n": "Nalawan Festival, Malekula", "c": "events", "isl": "Malekula", "lon": 167.423, "lat": -16.101, "t": "Every year", "d": "A two-day festival on Malekula, listed for 23 and 24 August in one recent year.", "tip": "Dates move from year to year. Check the Vanuatu Tourism Office events calendar before you book. The pin is placed near Lakatoro; the exact village is not confirmed.", "approx": true, "h": "late August", "x": "hist", "i": 61}, {"id": "vanualava", "n": "Vanua Lava Day, Banks Islands", "c": "events", "isl": "Banks Islands", "lon": 167.54, "lat": -13.886, "t": "Every year, four days", "d": "A four-day island festival on Vanua Lava starting on 1 September.", "tip": "Dates move from year to year. Check the Vanuatu Tourism Office events calendar before you book. The pin is placed near Sola; the exact village is not confirmed.", "approx": true, "h": "1 September", "x": "hist", "i": 62}]};
+const EFATE={w:168.15,e:168.59,s:-17.835,n:-17.53};
+const COUNTRY={w:166.45,e:170.3,s:-20.35,n:-13.05};
+const $=id=>document.getElementById(id);
+const stage=$('stage'),cv=$('cv'),ctx=cv.getContext('2d'),pinlayer=$('pinlayer');
+const mx=lon=>(lon+180)/360;
+const my=lat=>{const s=Math.sin(lat*Math.PI/180);return 0.5-Math.log((1+s)/(1-s))/(4*Math.PI)};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+let W=800,H=600,dpr=1,cx=0,cy=0,z=10;
+const S=()=>256*Math.pow(2,z);
+const show={routes:false,trans:true,stays:true,roads:true,rivers:true,buildings:true,places:true,decor:true};
+// category colours (bright, kid palette)
+const CC={hist:'#8a6a2e',water:'#2f7fa6',beach:'#d99a2b',culture:'#b9553a',food:'#5f8f4a',sea:'#3a9aa8',vol:'#a63d2f',base:'#7a6a8a',events:'#b0457a'};
+Object.keys(D.cats).forEach(k=>D.cats[k].c=CC[k]||D.cats[k].c);
+
+const store={};
+function decodeLine(a){const n=(a.length>>1);const x=new Float64Array(n),y=new Float64Array(n);let X=a[0],Y=a[1];let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  for(let i=0;i<n;i++){if(i>0){X+=a[2*i];Y+=a[2*i+1]}const px=mx(X/1e5),py=my(Y/1e5);x[i]=px;y[i]=py;if(px<x0)x0=px;if(px>x1)x1=px;if(py<y0)y0=py;if(py>y1)y1=py}
+  return{x,y,bb:[x0,y0,x1,y1]}}
+const loading={};let pending=0;
+function load(name,kind){
+  if(store[name]||loading[name])return;loading[name]=1;pending++;status();
+  fetch('data/'+name).then(r=>{if(!r.ok)throw 0;return r.json()}).then(j=>{
+    if(kind==='lines')store[name]=j.map(decodeLine);
+    else if(kind==='bundle'){const o={};for(const k in j)o[k]=j[k].map(decodeLine);store[name]=o}
+    else store[name]=j;
+  }).catch(()=>{store[name]=kind==='plain'?[]:[]}).finally(()=>{pending--;status();schedule()});
+}
+function ensure(name,kind){if(store[name])return store[name];load(name,kind);return null}
+function status(){$('status').style.display=pending>0?'block':'none'}
+load('land.json','lines');load('decor.json','plain');load('places.json','plain');load('bcells.json','plain');
+
+// ---------- crayon textures ----------
+function tile(w,h,fn){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.lineCap='round';fn(g);return c}
+function rnd(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646}}
+const seaTile=tile(72,48,g=>{g.strokeStyle='rgba(60,130,160,.55)';g.lineWidth=1.3;for(const [x,y] of [[8,12],[44,34],[58,8]]){g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(x+6,y-7,x+12,y);g.quadraticCurveTo(x+18,y+7,x+24,y);g.stroke()}
+  g.strokeStyle='rgba(60,130,160,.3)';g.lineWidth=1.1;for(const [x,y] of [[26,22],[2,40]]){g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(x+5,y-6,x+10,y);g.quadraticCurveTo(x+15,y+6,x+20,y);g.stroke()}});
+const landTile=tile(64,64,g=>{const r=rnd(7);for(let i=0;i<14;i++){const x=r()*64,y=r()*64,a=r()*Math.PI,l=8+r()*10;g.strokeStyle='rgba(90,110,50,.28)';g.lineWidth=1;g.beginPath();g.moveTo(x,y);g.lineTo(x+Math.cos(a)*l,y+Math.sin(a)*l);g.stroke()}});
+let seaPat=null,landPat=null;
+// wobble: deterministic in world space so lines stay put while panning
+let WA=1.2;
+function wob(wx,wy){return[Math.sin(wx*.045+wy*.021)*WA+Math.sin(wy*.11+wx*.03)*WA*.5,Math.cos(wy*.047-wx*.019)*WA+Math.cos(wx*.13)*WA*.5]}
+function lineSet(feats,x0,y0,x1,y1,s,ox,oy,wb){
+  ctx.beginPath();
+  for(const f of feats){const b=f.bb;if(b[2]<x0||b[0]>x1||b[3]<y0||b[1]>y1)continue;
+    for(let i=0;i<f.x.length;i++){let px=(f.x[i]-cx)*s+ox,py=(f.y[i]-cy)*s+oy;if(wb){const w=wob(f.x[i]*s,f.y[i]*s);px+=w[0];py+=w[1]}if(i)ctx.lineTo(px,py);else ctx.moveTo(px,py)}}
+}
+function polySet(feats,x0,y0,x1,y1,s,ox,oy,wb,target){
+  const c=target||ctx;c.beginPath&&!target&&ctx.beginPath();
+  for(const f of feats){const b=f.bb;if(b[2]<x0||b[0]>x1||b[3]<y0||b[1]>y1)continue;
+    for(let i=0;i<f.x.length;i++){let px=(f.x[i]-cx)*s+ox,py=(f.y[i]-cy)*s+oy;if(wb){const w=wob(f.x[i]*s,f.y[i]*s);px+=w[0];py+=w[1]}if(i)c.lineTo(px,py);else c.moveTo(px,py)}c.closePath()}
+}
+let centres=null;
+function seaStrokes(s,ox,oy){
+  const land=store['land.json'];if(!land||!land.length)return;
+  if(!centres){centres=land.map(f=>{const b=f.bb;return{x:(b[0]+b[2])/2,y:(b[1]+b[3])/2,r:Math.max(b[2]-b[0],b[3]-b[1])/2,a:(b[2]-b[0])*(b[3]-b[1])}}).sort((p,q)=>q.a-p.a).slice(0,500)}
+  const sc=[];for(const c of centres){const x=(c.x-cx)*s+ox,y=(c.y-cy)*s+oy,r=c.r*s*.55;if(x<-W*1.2||x>W*2.2||y<-H*1.2||y>H*2.2)continue;if(r<7)continue;sc.push([x,y,r])}
+  if(!sc.length)return;
+  const cell=11,wx0=cx*s-ox,wy0=cy*s-oy;
+  const i0=Math.floor(wx0/cell)-1,i1=Math.floor((wx0+W)/cell)+1,j0=Math.floor(wy0/cell)-1,j1=Math.floor((wy0+H)/cell)+1;
+  const B=[new Path2D(),new Path2D(),new Path2D(),new Path2D()],Wp=new Path2D();
+  for(let i=i0;i<=i1;i++)for(let j=j0;j<=j1;j++){
+    const h1=hash(i*131+j*7+1),h2=hash(i*17+j*311+5),h3=hash(i*53+j*29+9);
+    const px=i*cell+h1*cell-wx0,py=j*cell+h2*cell-wy0;
+    let dm=1e9,bx=0,by=0;for(const c of sc){const dx=px-c[0],dy=py-c[1],d=Math.sqrt(dx*dx+dy*dy)-c[2];if(d<dm){dm=d;bx=dx;by=dy}}
+    if(dm<0)dm=0;
+    const ang=Math.atan2(by,bx)+(h3-.5)*.5,len=10+h1*14,ux=Math.cos(ang),uy=Math.sin(ang);
+    const t=dm<50?0:dm<130?1:dm<300?2:3;
+    const p=B[t];p.moveTo(px,py);p.lineTo(px+ux*len,py+uy*len);
+    if(h3>.6){Wp.moveTo(px+3*uy,py-3*ux);Wp.lineTo(px+3*uy+ux*len*.7,py-3*ux+uy*len*.7)}
+  }
+  ctx.lineCap='round';ctx.lineWidth=3.4;
+  const cols=['rgba(120,160,170,.16)','rgba(115,145,190,.17)','rgba(110,130,195,.20)','rgba(105,118,195,.24)'];
+  B.forEach((p,i)=>{ctx.strokeStyle=cols[i];ctx.stroke(p)});
+  ctx.lineWidth=2.6;ctx.strokeStyle='rgba(255,255,255,.4)';ctx.stroke(Wp);
+}
+function hash(i){const t=Math.sin(i*12.9898)*43758.5453;return t-Math.floor(t)}
+// ---------- doodles ----------
+const OUT='#4a3522';
+function face(g,x,y,k=1){return;g.fillStyle=OUT;g.beginPath();g.arc(x-5*k,y,2.2*k,0,7);g.arc(x+5*k,y,2.2*k,0,7);g.fill();g.strokeStyle=OUT;g.lineWidth=2*k;g.beginPath();g.arc(x,y+3*k,5*k,.15*Math.PI,.85*Math.PI);g.stroke()}
+const CRE={
+ boat:g=>{g.lineJoin='round';g.lineCap='round';g.strokeStyle=OUT;
+  // float (ama) on the far side, joined by two lashed booms
+  g.lineWidth=2;g.beginPath();g.moveTo(-14,3);g.lineTo(-16,-9);g.moveTo(12,3);g.lineTo(14,-9);g.stroke();
+  g.fillStyle='#a7743f';g.lineWidth=1.6;g.beginPath();g.moveTo(-26,-9);g.quadraticCurveTo(0,-5,26,-10);g.quadraticCurveTo(0,-13,-26,-9);g.closePath();g.fill();g.stroke();
+  // dugout hull with raised, carved ends
+  g.fillStyle='#8a5a34';g.lineWidth=1.8;g.beginPath();g.moveTo(-38,-8);g.quadraticCurveTo(-34,3,-20,5);g.quadraticCurveTo(0,9,20,5);g.quadraticCurveTo(34,3,40,-10);g.quadraticCurveTo(30,-1,18,0);g.quadraticCurveTo(0,3,-18,0);g.quadraticCurveTo(-30,-1,-38,-8);g.closePath();g.fill();g.stroke();
+  g.strokeStyle='rgba(74,53,34,.6)';g.lineWidth=1;g.beginPath();g.moveTo(-24,3);g.quadraticCurveTo(0,7,22,3);g.stroke();g.strokeStyle=OUT;
+  // lashings
+  g.lineWidth=2.4;g.strokeStyle='#e0a52a';g.beginPath();g.moveTo(-17,-1);g.lineTo(-11,-1);g.moveTo(9,-1);g.lineTo(15,-1);g.stroke();g.strokeStyle=OUT;
+  // paddler and paddle
+  g.fillStyle='#4a3522';g.beginPath();g.arc(2,-17,3.6,0,7);g.fill();g.lineWidth=2.6;g.beginPath();g.moveTo(2,-13);g.lineTo(1,-2);g.stroke();
+  g.lineWidth=1.8;g.beginPath();g.moveTo(-8,-14);g.lineTo(14,6);g.stroke();g.fillStyle='#c8553d';g.beginPath();g.ellipse(15,7.5,2.6,5,-.8,0,7);g.fill();g.stroke()},
+ whale:g=>{g.lineWidth=1.8;g.strokeStyle=OUT;g.fillStyle='#8aa3ad';g.beginPath();g.moveTo(-30,0);g.quadraticCurveTo(-26,-17,0,-16);g.quadraticCurveTo(26,-15,32,-2);g.quadraticCurveTo(34,8,22,10);g.quadraticCurveTo(0,16,-24,8);g.quadraticCurveTo(-30,6,-30,0);g.closePath();g.fill();g.stroke();
+  g.fillStyle='#8aa3ad';g.beginPath();g.moveTo(-30,0);g.lineTo(-42,-9);g.quadraticCurveTo(-38,0,-42,9);g.closePath();g.fill();g.stroke();
+  g.beginPath();g.moveTo(-4,8);g.quadraticCurveTo(0,18,10,14);g.stroke();g.fillStyle=OUT;g.beginPath();g.arc(24,-3,1.8,0,7);g.fill();g.beginPath();g.arc(31,3,1.2,0,7);g.fill()},
+ fish:g=>{g.lineWidth=1.8;g.strokeStyle=OUT;g.fillStyle='#e8913a';g.beginPath();g.moveTo(-20,0);g.quadraticCurveTo(0,-18,18,0);g.quadraticCurveTo(0,18,-20,0);g.closePath();g.fill();g.stroke();
+  g.beginPath();g.moveTo(18,0);g.lineTo(32,-11);g.lineTo(32,11);g.closePath();g.fill();g.stroke();
+  g.fillStyle='#fff';g.lineWidth=1.4;for(const x of [-8,2,11]){g.beginPath();g.moveTo(x,-12+Math.abs(x)*.1);g.quadraticCurveTo(x+3,0,x,12-Math.abs(x)*.1);g.lineTo(x+4,10);g.quadraticCurveTo(x+7,0,x+4,-10);g.closePath();g.fill();g.stroke()}
+  g.fillStyle=OUT;g.beginPath();g.arc(-11,-2,1.8,0,7);g.fill()},
+ turtle:g=>{g.lineWidth=1.8;g.strokeStyle=OUT;g.fillStyle='#9db37a';for(const [x,y] of [[-18,-14],[18,-14],[-18,14],[18,14]]){g.beginPath();g.ellipse(x,y,9,6,0,0,7);g.fill();g.stroke()}g.beginPath();g.arc(28,0,9,0,7);g.fill();g.stroke();g.fillStyle='#7f9e5e';g.beginPath();g.ellipse(0,0,24,18,0,0,7);g.fill();g.stroke();g.strokeStyle='#4f6b3a';g.lineWidth=1.4;g.beginPath();g.moveTo(-10,-12);g.lineTo(-4,0);g.lineTo(-10,12);g.moveTo(10,-12);g.lineTo(4,0);g.lineTo(10,12);g.moveTo(-4,0);g.lineTo(4,0);g.stroke();g.fillStyle=OUT;g.beginPath();g.arc(31,-3,1.8,0,7);g.fill()},
+ ship:g=>{g.lineWidth=1.8;g.strokeStyle=OUT;g.fillStyle='#fff';g.beginPath();g.moveTo(-44,0);g.lineTo(44,0);g.lineTo(34,16);g.lineTo(-36,16);g.closePath();g.fill();g.stroke();g.fillStyle='#6f9fb8';g.fillRect(-44,0,88,5);g.fillStyle='#fff';g.fillRect(-30,-15,56,15);g.strokeRect(-30,-15,56,15);g.fillRect(-14,-27,30,12);g.strokeRect(-14,-27,30,12);g.fillStyle='#c8553d';g.fillRect(2,-38,9,11);g.strokeRect(2,-38,9,11);g.fillStyle='#e3b64f';for(let i=0;i<4;i++){g.beginPath();g.arc(-22+i*12,-7,3,0,7);g.fill();g.stroke()}},
+ plane:g=>{g.lineWidth=1.8;g.strokeStyle=OUT;g.fillStyle='#fff';g.rotate(-.25);g.beginPath();g.moveTo(-32,0);g.quadraticCurveTo(0,-11,32,-3);g.lineTo(40,0);g.lineTo(32,4);g.quadraticCurveTo(0,9,-32,0);g.closePath();g.fill();g.stroke();g.fillStyle='#c8553d';g.beginPath();g.moveTo(-4,-3);g.lineTo(-16,-26);g.lineTo(-8,-26);g.lineTo(10,-3);g.closePath();g.fill();g.stroke();g.beginPath();g.moveTo(-4,3);g.lineTo(-16,24);g.lineTo(-8,24);g.lineTo(10,4);g.closePath();g.fill();g.stroke()}
+};
+function landStrokes(s,ox,oy){
+  const cell=8,wx0=cx*s-ox,wy0=cy*s-oy;
+  const i0=Math.floor(wx0/cell)-1,i1=Math.floor((wx0+W)/cell)+1,j0=Math.floor(wy0/cell)-1,j1=Math.floor((wy0+H)/cell)+1;
+  const B=[new Path2D(),new Path2D(),new Path2D(),new Path2D()];
+  for(let i=i0;i<=i1;i++)for(let j=j0;j<=j1;j++){
+    const h1=hash(i*97+j*13+3),h2=hash(i*31+j*211+7),h3=hash(i*61+j*43+11);
+    const px=i*cell+h1*cell-wx0,py=j*cell+h2*cell-wy0,len=12+h3*16,a=-Math.PI/2+(h1-.5)*.34;
+    const p=B[h3<.3?0:h3<.62?1:h3<.85?2:3];p.moveTo(px,py);p.lineTo(px+Math.cos(a)*len,py+Math.sin(a)*len);
+  }
+  ctx.lineCap='round';ctx.lineWidth=3.2;
+  const cols=['rgba(170,205,110,.34)','rgba(135,180,85,.26)','rgba(95,150,80,.18)','rgba(255,255,255,.42)'];
+  B.forEach((p,i)=>{ctx.strokeStyle=cols[i];ctx.stroke(p)});
+}
+function hillSym(x,y,k,seed){ctx.lineJoin='round';ctx.lineCap='round';const w=24*k,h=26*k;
+  const dome=()=>{ctx.beginPath();ctx.moveTo(x-w,y);ctx.quadraticCurveTo(x-w*.85,y-h*1.35,x,y-h*1.05);ctx.quadraticCurveTo(x+w*.85,y-h*1.35,x+w,y);ctx.closePath()};
+  ctx.save();dome();ctx.clip();
+  const g=ctx.createLinearGradient(0,y-h*1.1,0,y);g.addColorStop(0,'rgba(70,130,70,.95)');g.addColorStop(.55,'rgba(120,175,95,.75)');g.addColorStop(1,'rgba(200,225,150,.25)');ctx.fillStyle=g;ctx.fillRect(x-w,y-h*1.2,w*2,h*1.3);
+  ctx.lineWidth=2.2;const cols=['rgba(45,110,80,.55)','rgba(70,140,70,.5)','rgba(40,100,95,.4)'];
+  for(let xx=x-w;xx<=x+w;xx+=3.4){const r=hash(xx*7.1+seed*3.3),top=y-h*(1.05-.5*Math.pow((xx-x)/w,2)*1.4)-r*3;ctx.strokeStyle=cols[(r*3)|0];ctx.beginPath();ctx.moveTo(xx,top);ctx.lineTo(xx+(r-.5)*3,top+h*(.35+.5*r));ctx.stroke()}
+  ctx.restore();
+  ctx.lineWidth=1.5;ctx.strokeStyle='rgba(50,100,55,.85)';ctx.beginPath();ctx.moveTo(x-w,y);ctx.quadraticCurveTo(x-w*.85,y-h*1.35,x,y-h*1.05);ctx.quadraticCurveTo(x+w*.85,y-h*1.35,x+w,y);ctx.stroke()}
+function volcanoSym(x,y,k){ctx.lineJoin='round';ctx.lineCap='round';const w=18*k,h=24*k;
+  ctx.beginPath();ctx.moveTo(x-w,y);ctx.lineTo(x-w*.28,y-h);ctx.lineTo(x+w*.28,y-h);ctx.lineTo(x+w,y);ctx.closePath();ctx.fillStyle='#c98d62';ctx.fill();ctx.lineWidth=1.8;ctx.strokeStyle=OUT;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(x,y-h,w*.28,3.2*k,0,0,7);ctx.fillStyle='#c8553d';ctx.fill();ctx.lineWidth=1.4;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x-w*.1,y-h-3*k);ctx.quadraticCurveTo(x-w*.45,y-h-12*k,x,y-h-17*k);ctx.quadraticCurveTo(x+w*.5,y-h-24*k,x+w*.1,y-h-31*k);ctx.lineWidth=1.8;ctx.strokeStyle='rgba(74,53,34,.7)';ctx.stroke();
+  hatch(x+w*.2,y-h*.35,w*.8,h*.7,4)}
+function peakSym(x,y,k){ctx.lineJoin='round';const w=13*k,h=17*k;ctx.beginPath();ctx.moveTo(x-w,y);ctx.lineTo(x-w*.15,y-h);ctx.lineTo(x+w*.25,y-h*.45);ctx.lineTo(x+w*.5,y-h*.7);ctx.lineTo(x+w,y);ctx.closePath();ctx.fillStyle='#cdbf9b';ctx.fill();ctx.lineWidth=1.7;ctx.strokeStyle=OUT;ctx.stroke();hatch(x+w*.2,y-h*.3,w*.7,h*.6,3)}
+function hatch(x,y,w,h,n){ctx.strokeStyle='rgba(74,53,34,.55)';ctx.lineWidth=1.1;ctx.beginPath();for(let i=0;i<n;i++){const t=(i+.5)/n,xx=x-w*.7+t*w*1.2;ctx.moveTo(xx,y-h*.1+i%2*3);ctx.lineTo(xx-w*.12,y+h*.35)}ctx.stroke()}
+function mountain(x,y,w,h,k){ctx.lineJoin='round';ctx.lineWidth=1.8;ctx.strokeStyle=OUT;
+  ctx.beginPath();ctx.moveTo(x-w,y+h*.4);ctx.lineTo(x-w*.45,y-h*.3);ctx.lineTo(x-w*.1,y-h);ctx.lineTo(x+w*.3,y-h*.2);ctx.lineTo(x+w,y+h*.4);ctx.closePath();ctx.fillStyle=k?'#d8c08f':'#cdbf9b';ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x-w*.1,y-h);ctx.lineTo(x-w*.05,y+h*.4);ctx.stroke();hatch(x+w*.1,y,w*.6,h*.8,5)}
+function hill(x,y,w,h){ctx.lineWidth=1.7;ctx.strokeStyle=OUT;ctx.beginPath();ctx.moveTo(x-w,y+h*.4);ctx.quadraticCurveTo(x-w*.6,y-h*1.1,x,y-h);ctx.quadraticCurveTo(x+w*.6,y-h*1.1,x+w,y+h*.4);ctx.closePath();ctx.fillStyle='#c5d68f';ctx.fill();ctx.stroke();hatch(x+w*.15,y,w*.7,h*.6,4)}
+function palm(x,y,k){ctx.lineCap='round';ctx.strokeStyle=OUT;ctx.lineWidth=3.2*k;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+8*k,y-18*k,x+4*k,y-32*k);ctx.stroke();ctx.strokeStyle='#e0a52a';ctx.lineWidth=1.8*k;ctx.stroke();
+  const tx=x+4*k,ty=y-32*k;ctx.lineJoin='round';
+  for(const a of [-2.7,-2.1,-1.0,-.4,.2,3.0]){const ex=tx+Math.cos(a)*30*k,ey=ty+Math.sin(a)*14*k+8*k;ctx.beginPath();ctx.moveTo(tx,ty);ctx.quadraticCurveTo(tx+Math.cos(a)*18*k,ty-14*k,ex,ey);ctx.quadraticCurveTo(tx+Math.cos(a)*16*k,ty-4*k,tx,ty);ctx.fillStyle='#3f8f86';ctx.fill();ctx.lineWidth=1.2;ctx.strokeStyle='#2c5f5a';ctx.stroke()}
+  ctx.fillStyle='#6b4a2b';ctx.beginPath();ctx.arc(tx-2*k,ty+3*k,2*k,0,7);ctx.arc(tx+3*k,ty+4*k,2*k,0,7);ctx.fill()}
+function lolly(x,y,k){ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=OUT;
+  for(const dx of [-7,-2,4,9]){ctx.lineWidth=2.2*k;ctx.beginPath();ctx.moveTo(x+dx*k,y-17*k);ctx.lineTo(x+dx*1.15*k,y);ctx.stroke()}
+  ctx.lineWidth=3.4*k;ctx.beginPath();ctx.moveTo(x+1*k,y);ctx.lineTo(x+1*k,y-18*k);ctx.stroke();ctx.strokeStyle='#8a5a34';ctx.lineWidth=2*k;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x-22*k,y-18*k);ctx.quadraticCurveTo(x-24*k,y-38*k,x-8*k,y-40*k);ctx.quadraticCurveTo(x,y-50*k,x+10*k,y-41*k);ctx.quadraticCurveTo(x+26*k,y-38*k,x+22*k,y-18*k);ctx.quadraticCurveTo(x,y-14*k,x-22*k,y-18*k);ctx.closePath();
+  ctx.fillStyle='#5f9a5a';ctx.fill();ctx.lineWidth=1.5*k;ctx.strokeStyle=OUT;ctx.stroke();
+  ctx.strokeStyle='rgba(255,255,255,.28)';ctx.lineWidth=1.4*k;ctx.beginPath();ctx.moveTo(x-12*k,y-34*k);ctx.quadraticCurveTo(x-6*k,y-40*k,x+2*k,y-38*k);ctx.stroke()}
+const PAL=['#e8c9a0','#e3bf94','#ecd3ae','#dcb98c','#efd9b6','#e0c49a'];
+
+// ---------- main draw ----------
+let raf=0;function schedule(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;draw()})}
+function draw(){
+  const s=S();ctx.setTransform(dpr,0,0,dpr,0,0);ctx.lineJoin='round';ctx.lineCap='round';
+  WA=clamp(.8+(z-6)*.2,.8,2);
+  const ox=W/2,oy=H/2;const x0=cx-ox/s,x1=cx+ox/s,y0=cy-oy/s,y1=cy+oy/s;
+  const lonw=x0*360-180,lone=x1*360-180;
+  const latOf=py=>{const n=Math.PI-2*Math.PI*py;return 180/Math.PI*Math.atan(0.5*(Math.exp(n)-Math.exp(-n)))};
+  const lat0=latOf(y1),lat1=latOf(y0);
+  // sea
+  ctx.fillStyle='#d3e0e2';ctx.fillRect(0,0,W,H);
+  seaStrokes(s,ox,oy);
+  // land
+  const land=store['land.json'];
+  if(land&&land.length){
+    polySet(land,x0,y0,x1,y1,s,ox,oy,true);
+    ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=clamp(8+(z-8)*1.4,8,22);ctx.stroke();
+    ctx.fillStyle='#e6edc9';ctx.fill();
+    ctx.save();ctx.clip();landStrokes(s,ox,oy);ctx.restore();
+    ctx.strokeStyle='#5b7a47';ctx.lineWidth=1.6;ctx.stroke();
+  }
+  const dec=store['decor.json'];
+  // real volcanoes and peaks from OpenStreetMap
+  if(show.decor&&dec&&dec.peaks){
+    const k=clamp(.75+(z-6)*.11,.75,1.7);ctx.textBaseline='alphabetic';
+    for(const p of dec.peaks){const named=!!p[3];if(p[2]===1&&z<(named?9:10.5))continue;if(p[2]===0&&z<7)continue;
+      const px=(mx(p[0])-cx)*s+ox,py=(my(p[1])-cy)*s+oy;if(px<-60||px>W+60||py<-60||py>H+60)continue;
+      if(p[2]===0)volcanoSym(px,py,k);else hillSym(px,py,k,p[0]*1000+p[1]);
+      if(named&&z>=(p[2]===0?9.5:11)){ctx.font=`italic ${Math.round(15+k*2)}px Caveat,cursive`;const fs=Math.round(15+k*2),w=ctx.measureText(p[3]).width;ctx.lineJoin='round';ctx.lineWidth=4;ctx.strokeStyle='rgba(251,243,220,.9)';ctx.strokeText(p[3],px-w/2,py+15*k);ctx.fillStyle='#6b3a22';ctx.fillText(p[3],px-w/2,py+15*k);
+        if(p[4]){const h=p[4].toLocaleString('en-GB')+' m';ctx.font=`italic ${fs-2}px Caveat,cursive`;const w2=ctx.measureText(h).width,y2=py+15*k+fs-1;ctx.strokeText(h,px-w2/2,y2);ctx.fillText(h,px-w2/2,y2)}}}
+  }
+  // water areas, rivers
+  if(show.rivers&&z>=8){const wa=ensure('waterarea.json','lines');if(wa){polySet(wa,x0,y0,x1,y1,s,ox,oy,true);ctx.fillStyle='#b9e0e6';ctx.fill();ctx.strokeStyle='#3a86a8';ctx.lineWidth=1.3;ctx.stroke()}}
+  if(show.rivers){
+    if(z>=12){const w2=ensure('water2.json','lines');if(w2){lineSet(w2,x0,y0,x1,y1,s,ox,oy,true);ctx.strokeStyle='#4f9cbd';ctx.lineWidth=clamp(1+(z-12)*.3,1,2.2);ctx.stroke()}}
+    if(z>=9){const w1=ensure('water1.json','lines');if(w1){lineSet(w1,x0,y0,x1,y1,s,ox,oy,true);ctx.strokeStyle='#3a86a8';ctx.lineWidth=clamp(1.4+(z-9)*.3,1.4,3.2);ctx.stroke()}}
+  }
+  // houses
+  if(show.buildings&&z>=14){
+    const bc=store['bcells.json'];
+    if(bc&&bc.n){const C=bc.cell;
+      for(let ix=Math.floor(lonw/C);ix<=Math.floor(lone/C);ix++)for(let iy=Math.floor(lat0/C);iy<=Math.floor(lat1/C);iy++){
+        const key=ix+'_'+iy;if(!bc.n[key])continue;const bd=ensure('bb_'+Math.floor(ix/bc.bundle)+'_'+Math.floor(iy/bc.bundle)+'.json','bundle');if(!bd)continue;const f=bd[key];if(!f)continue;
+        polySet(f,x0,y0,x1,y1,s,ox,oy,false);ctx.lineWidth=clamp(14-(z-14)*1.5,8,14);ctx.strokeStyle='#dfe7ae';ctx.stroke();
+        const paths=PAL.map(()=>new Path2D());
+        for(let i=0;i<f.length;i++){const b=f[i].bb;if(b[2]<x0||b[0]>x1||b[3]<y0||b[1]>y1)continue;const p=paths[(i*7+(i>>3))%6],g=f[i];
+          for(let j=0;j<g.x.length;j++){const px=(g.x[j]-cx)*s+ox,py=(g.y[j]-cy)*s+oy;if(j)p.lineTo(px,py);else p.moveTo(px,py)}p.closePath()}
+        PAL.forEach((c,i)=>{ctx.fillStyle=c;ctx.fill(paths[i]);if(z>=15){ctx.strokeStyle=OUT;ctx.lineWidth=1;ctx.stroke(paths[i])}})}
+    }
+  }
+  // roads
+  if(show.roads){
+    const tiers=[[6,15.5,1,.25,2,'roads6.json',true],[5,14,1.1,.3,3,'roads5.json',true],[4,13,1.3,.35,3.6,'roads4.json',false],[3,11.5,1.5,.4,4.5,'roads3.json',false],[2,10,1.8,.45,6,'roads2.json',false],[1,6.5,2.2,.5,8,'roads1.json',false]];
+    for(const [t,zmin,w0,dw,wmax,name,dash] of tiers){
+      if(z<zmin)continue;const f=ensure(name,'lines');if(!f)continue;
+      const w=clamp(w0+(z-zmin)*dw,w0,wmax);lineSet(f,x0,y0,x1,y1,s,ox,oy,true);
+      ctx.strokeStyle='#6b4a2b';ctx.lineWidth=w+1.6;ctx.stroke();
+      ctx.strokeStyle=dash?'#f4e6c0':'#fbf3dc';ctx.lineWidth=w;ctx.stroke();
+      if(t<=2&&z>=10){ctx.setLineDash([w*1.6,w*1.6]);ctx.strokeStyle='#c8553d';ctx.lineWidth=Math.max(1,w*.18);ctx.stroke();ctx.setLineDash([])}
+    }
+  }
+  // trees & palms
+  if(show.decor&&dec&&dec.palms){const pxDeg=s/360;const R=52/pxDeg,lv=[.06,.03,.016,.009];let k=-1;lv.forEach((r,i)=>{if(r>=R)k=i});const a=clamp(14.5-z,0,1);
+    if(k>=0&&a>0){ctx.globalAlpha=a;const kk=clamp(.8+(z-9)*.05,.7,1.2);dec.palms.forEach((p,i)=>{if(p[2]>k)return;const px=(mx(p[0])-cx)*s+ox,py=(my(p[1])-cy)*s+oy;if(px<-50||px>W+50||py<-60||py>H+60)return;if(hash(i*5+2)<.6)palm(px,py,kk);else lolly(px,py,kk)});ctx.globalAlpha=1}
+    if(dec.creatures&&z<11.8&&z>=6.8){const ca=clamp(11.8-z,0,1)*clamp((z-6.8)*3,0,1);const kinds=['boat','whale','fish','turtle','ship','plane'];ctx.globalAlpha=ca;
+      dec.creatures.forEach((c,i)=>{const px=(mx(c[1])-cx)*s+ox,py=(my(c[2])-cy)*s+oy;if(px<-70||px>W+70||py<-70||py>H+70)return;
+        let kind=c[0]==='dolphin'?(i%2?'whale':'turtle'):c[0];ctx.save();ctx.translate(px,py);
+        if(kind==='fish'||kind==='whale'||kind==='turtle')ctx.rotate((hash(i)-.5)*.5);
+        const f=(kind==='ship'?.8:.9)*clamp(.5+(z-6.5)*.18,.5,1);ctx.scale(f,f);CRE[kind](ctx);ctx.restore()});ctx.globalAlpha=1}
+  }
+  if(show.routes)drawRoutes(s,ox,oy);
+  if(show.places)drawLabels(s,ox,oy);
+  if(show.stays)drawStays(s,ox,oy);
+  if(show.trans)drawTrans(s,ox,oy);
+  if(show.routes)routeLabels(s,ox,oy);
+  if(hl){const px=(mx(hl[0])-cx)*s+ox,py=(my(hl[1])-cy)*s+oy;ctx.lineWidth=3;ctx.strokeStyle='#c8553d';ctx.beginPath();ctx.arc(px,py,15,0,7);ctx.stroke();ctx.globalAlpha=.45;ctx.beginPath();ctx.arc(px,py,24,0,7);ctx.stroke();ctx.globalAlpha=1}
+  updatePins(s,ox,oy);updateChrome();
+}
+
+const STAYS=[["Hideaway Resort","Motel",168.26329,-17.69652],["Iririki Island Resort","Hotel",168.30981,-17.74354],["Erakor Island Resort","Hotel",168.30973,-17.77356],["Hôtel Olympic","Hotel",168.31255,-17.73612],["Room with a view","Guesthouse",168.31217,-17.73104],["Moorings","Hotel",168.31135,-17.73078],["Island Magic Resort","Hotel",168.24659,-17.687],["Benjor Beach Club","Hotel",168.24081,-17.68996],["Grand Hotel & Casino","Hotel",168.314,-17.74223],["Secret Beach","Camp site",168.5574,-17.76446],["Eratap Resort","Hotel",168.34939,-17.79875],["Aquana","Hotel",168.35627,-17.78961],["City Motel","Motel",168.31253,-17.73591],["Kaiviti Motel","Motel",168.31484,-17.74813],["Vanuatu Holiday Hotel","Hotel",168.31562,-17.74818],["Deco Stop Lodge","Hotel",167.18358,-15.51071],["Hotel Santo","Hotel",167.17555,-15.51452],["Beachfront Resort","Hotel",167.16203,-15.52108],["Village de Santo","Hotel",167.16307,-15.51929],["Jungle Oasis","Camp site",169.43518,-19.54805],["BAMBOU Beach","Camp site",168.46108,-17.55716],["EVERGREEN","Hotel",169.22347,-19.44321],["Yasur camping","Camp site",169.43726,-19.54925],["Lajmoli Guesthouse","Guesthouse",166.55568,-14.87884],["Tasiriki Tuetueni Guest House","Guesthouse",166.78173,-15.59394],["Unity Park Motel","Hostel",167.17494,-15.51458],["Natapoa Motel","Motel",167.17542,-15.51285],["Bay of Illusions Yacht Club","Guesthouse",166.94859,-15.16206],["Little Paradise Bungalows","Guesthouse",167.07406,-15.0435],["Pandanus Guest House","Guesthouse",167.09289,-15.64266],["Lonnoc Beach Bungalows","Guesthouse",167.11328,-15.14962],["Mamas Guest House","Guesthouse",168.37447,-17.46477],["Forestry Guest House","Guesthouse",169.20988,-18.74757],["The Melanesian","Hotel",168.31496,-17.74752],["Tanna Tree Top Lodge","Guesthouse",169.43587,-19.54369],["Lolovange Dispensary House","Guesthouse",167.88382,-15.29963],["Tradewinds","Hotel",168.32251,-17.74503],["Poppys on the Lagoon","Hotel",168.3235,-17.74536],["Grace House YWAM Guest House","Guesthouse",168.3198,-17.73567],["Pacific Paradise Motel","Motel",168.31039,-17.71854],["The Spotsmens Hotel","Hotel",168.3167,-17.74494],["Port Resolution Yacht Club and Cabin","Guesthouse",169.49936,-19.52579],["Rocky Ridge Bungalows","Guesthouse",169.22699,-19.43299],["Nak Bungalow","Hostel",168.19201,-15.94641],["Asia Motel","Motel",167.17848,-15.51428],["Yasur Bungalows","Hostel",169.41984,-19.54068],["Havannah beach Camping and BBQ","Camp site",168.24457,-17.58695],["Tanna Horizon bungalous","Camp site",169.50556,-19.52122],["Sunset","Guesthouse",169.26226,-19.52833],["Beachcomber Resort","Hotel",168.44979,-17.53601],["Le Life Resort","Hotel",168.46957,-17.5719],["Hibiscus","Motel",168.31258,-17.73163],["Barnabas Aru Guest House","Guesthouse",168.31856,-17.72463],["Volcano view treehouse camping and bungalow","Camp site",169.4373,-19.54875],["Coconut Palm Resort","Motel",168.31933,-17.74414],["Blue Lagoon","Camp site",168.55602,-17.7614],["Rockwater Resort","Hotel",169.23611,-19.4182],["Hibiscus Attraction Center","Hostel",167.17508,-15.51287],["Faerua Residence","Chalet",168.32212,-17.72352],["Whispering Palms","Guesthouse",168.32915,-17.53417],["Usp hill","Hostel",168.32805,-17.73283],["Nebelchel","Guesthouse",167.40398,-16.07783],["Volcano Front Bungalow","Hotel",169.43529,-19.54815],["Tropicana Backpacker hotel","Hotel",167.17251,-15.51352],["River side hotel","Hotel",167.17102,-15.51407],["Beach front bungalow","Guesthouse",167.62648,-13.71571],["Malog Bungalow","Guesthouse",167.82516,-16.52712],["Bonvilau P.W.M.U","Guesthouse",167.8263,-16.52501],["Warwick Le Lagon Resort & Spa","Hotel",168.30892,-17.76744],["Cocomo Resort","Hotel",168.3361,-17.73541],["Coral Motel","Motel",168.31111,-17.72151],["Mataweli motel","Motel",167.20007,-15.51503],["Migotty motel","Motel",167.20101,-15.51487],["Travellers Lodge sapi village","Guesthouse",167.191,-15.50384],["Jabsing guest house","Guesthouse",168.2874,-17.77735],["Sunshine","Motel",167.17166,-15.51432],["Bamboo Garden","Motel",167.172,-15.51411],["Santo seaside villes","Guesthouse",167.15469,-15.52901],["Lambas Torba Guest House","Guesthouse",167.17129,-15.50354],["Holiday village","Guesthouse",167.20867,-15.49935],["Reach Vanuatu","Motel",167.20435,-15.4257],["Lapita lodge","Hotel",167.18018,-15.51148],["Tua lodge","Guesthouse",167.73258,-15.37469],["Toa Palace Bungalow","Guesthouse",167.73242,-15.37647],["the hidden lodge & tours","Guesthouse",167.20829,-15.50859],["Sunrise Bungalows","Guesthouse",167.41251,-16.09335],["Lakatoro Palm Lodge","Guesthouse",167.41484,-16.09631],["Bungalows White Beach","Hotel",169.2487,-19.51762],["Hôtel White Beach","Hotel",169.24875,-19.51831],["Waves on Bukura","Guesthouse",168.21773,-17.71106],["The Secret Garden Boutique Resort","Hotel",168.2617,-17.68396],["Paray Lodge","Hostel",168.31557,-17.75641],["Million Dollar View Resort","Hotel",167.24325,-15.52413],["Towoc Bungalows","Hotel",167.11771,-15.14839],["Cruce","Camp site",168.40698,-17.77103],["Hidden Treasure Bungalow","Hotel",169.25178,-19.523],["Matevulu Lodge","Hotel",167.18878,-15.38562],["Reef Resort","Hotel",167.18846,-15.35905],["Port patrick","Hostel",169.83013,-20.13755],["Lisa Steay Bungalows","Guesthouse",168.12901,-16.58989],["Paradise Sunset Bungalow","Guesthouse",168.16754,-16.59559],["Raynold's Board & Lodge","Guesthouse",168.31769,-17.74657],["Enpitoka Jungle Farm","Guesthouse",169.47571,-19.51961],["Casa","Hostel",168.27046,-17.53826],["Sandalwood Apartments","Hotel",168.30868,-17.76255],["Elak-Marik","Hotel",168.31433,-17.76079],["The Hub Vanuatu","Hotel",168.31605,-17.75751],["Blue Bay Resort Vanuatu","Hotel",168.23312,-17.69504],["Otemanu","Hotel",168.24516,-17.68734],["Mele Magic","Hotel",168.24478,-17.68762],["Qualius","Hotel",168.24353,-17.68816],["Villa Bele","Hotel",168.24293,-17.68844],["Vila Del Mare","Hotel",168.24266,-17.68857],["Kixe","Hotel",168.24224,-17.68878],["Villa Ducula","Hotel",168.24684,-17.68624],["Uncle Terry Island Dream","Hotel",168.24746,-17.68587],["Turtle Bay Lodge","Hotel",167.19154,-15.35671],["Black Pearl Resort","Hotel",167.2039,-15.42007],["The Espiritu","Hotel",167.17768,-15.51394],["Hannah Eco Lodge","Guesthouse",168.24448,-17.59454],["Bethlehem Inn","Hotel",168.31638,-17.74898],["JJ’s Bungalow","Guesthouse",168.39258,-17.48596],["City Lodge","Hotel",168.31465,-17.74076],["Central Inn","Hotel",168.31404,-17.73914],["The Bay House","Chalet",168.34892,-17.79854],["Janessa’s Dwellery","Guesthouse",168.31568,-17.70067],["Sunset Frangipani Bungalow","Guesthouse",168.39305,-17.48671],["Holiday Inn Resort Vanuatu","Hotel",168.32496,-17.73977],["Foyer nabanga","Hostel",168.31495,-17.73556],["Gimini Guest House","Guesthouse",168.31285,-17.7343],["Wora-Namoa Bungalow","Guesthouse",168.41847,-17.49786],["Pele Sunrise Bungalows","Guesthouse",168.41865,-17.49756],["Bella Bungalow","Guesthouse",168.41482,-17.50122],["Seahorse Bungalow","Guesthouse",168.41536,-17.50094],["Charety Bungalow","Guesthouse",168.39987,-17.49445],["Senababa Beach Bungalow","Guesthouse",168.39623,-17.48976],["SIMOA Bungalow","Guesthouse",168.39528,-17.48913],["David Samuel's Bungalow","Guesthouse",168.39306,-17.48655],["John Kalo's Bungalow","Guesthouse",168.39273,-17.48611],["Tavir Guest House","Guesthouse",168.22677,-16.44972],["Siko Daniel's Guest House","Guesthouse",168.22529,-16.45279],["Council Guest House","Guesthouse",168.22648,-16.45093],["Lopevi Gateway Bungalow","Guesthouse",168.21629,-16.50384],["Namarou Paradise Bungalows","Guesthouse",168.47314,-17.48363],["Emman and Imalo Motel","Guesthouse",168.31658,-17.7302],["Retreat Seaside","Hostel",168.32129,-17.74703],["JICBA Guest House","Guesthouse",167.98974,-15.28736],["Vanilla Guest House","Guesthouse",167.09301,-15.64362],["Torgil Guest House","Guesthouse",167.98719,-15.27974],["Mangoes Resort","Hotel",168.32276,-17.74105],["Bethany Guest House","Guesthouse",167.98902,-15.28684],["Tui Lodge","Guesthouse",167.98951,-15.28722],["Papaya Villa B&B","Guesthouse",168.54514,-17.79661],["Yasur Backpackers - Cabane dans les Arbres","Guesthouse",169.43402,-19.54271],["M resort","Hotel",168.20877,-17.63093],["campground","Camp site",169.477,-19.55046],["Fatumaru Lodge","Hotel",168.31052,-17.72544],["Ramada Resort by Wyndham Port Vila","Resort",168.31718,-17.75587,"hotel listing (not in OpenStreetMap)"]];
+const ROUTES=[["Port Vila \u2013 Santo", "Flight", [[168.32001, -17.6993], [167.22, -15.505]]], ["Port Vila \u2013 Tanna", "Flight", [[168.32001, -17.6993], [169.224, -19.4551]]], ["Port Vila \u2013 Norsup (Malekula)", "Flight", [[168.32001, -17.6993], [167.401, -16.0797]]], ["Port Vila \u2013 Craig Cove (Ambrym)", "Flight", [[168.32001, -17.6993], [167.924, -16.265]]], ["Port Vila \u2013 Longana (Ambae)", "Flight", [[168.32001, -17.6993], [167.967, -15.3067]]], ["Port Vila \u2013 Lamen Bay (Epi)", "Flight", [[168.32001, -17.6993], [168.159, -16.5842]]], ["Tanna \u2013 Aneityum", "Flight", [[169.224, -19.4551], [169.77076, -20.24914]]], ["Sola \u2013 Santo", "Flight", [[167.537, -13.8517], [167.22, -15.505]]], ["Sola \u2013 Torres", "Flight", [[167.537, -13.8517], [166.638, -13.328]]], ["Port Vila \u2013 Malekula \u2013 Luganville ferry", "Ferry", [[168.3133, -17.7395], [168.2736, -17.7431], [168.2045, -17.7546], [168.1701, -17.7569], [168.1393, -17.7121], [167.8495, -16.4482], [167.7796, -16.3223], [167.7012, -16.2513], [167.4789, -16.0784], [167.4438, -16.1127], [167.4789, -16.0784], [167.2268, -15.5514], [167.1805, -15.5157]]], ["Port Vila \u2013 Erromango \u2013 Tanna \u2013 Aneityum ferry", "Ferry", [[168.3133, -17.7395], [168.2736, -17.7431], [168.2438, -17.7649], [168.2436, -17.7922], [168.9766, -18.7791], [169.0011, -18.7693], [168.9766, -18.7791], [168.9723, -18.8715], [169.2306, -19.5241], [169.2455, -19.5467], [169.2661, -19.5331], [169.2455, -19.5467], [169.2727, -19.5878], [169.7517, -20.2584], [169.7681, -20.2697], [169.7823, -20.2629], [169.7751, -20.2477]]], ["Port Vila \u2013 Ambrym ferry", "Ferry", [[168.3133, -17.7395], [168.2736, -17.7431], [168.2045, -17.7546], [168.1701, -17.7569], [168.1393, -17.7121], [168.1253, -17.6467], [167.9168, -16.2816], [167.924, -16.265]]]];
+function routePts(r,s,ox,oy){const P=r[2].map(p=>[(mx(p[0])-cx)*s+ox,(my(p[1])-cy)*s+oy]);if(r[1]==='Flight'){const a=P[0],b=P[1],dx=b[0]-a[0],dy=b[1]-a[1];return{P,ctl:[(a[0]+b[0])/2-dy*.12,(a[1]+b[1])/2+dx*.12]}}return{P}}
+function wobLine(P,seed,amp){const o=[];for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.round(L/16));for(let k=0;k<n;k++){const u=k/n,j=seed*977+i*31+k;o.push([a[0]+(b[0]-a[0])*u+(hash(j)-.5)*amp*2,a[1]+(b[1]-a[1])*u+(hash(j+.5)-.5)*amp*2])}}o.push(P[P.length-1]);return o}
+function drawRoutes(s,ox,oy){
+  ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.globalAlpha=z>12.5?.5:1;
+  ROUTES.forEach((r,ri)=>{const{P,ctl}=routePts(r,s,ox,oy);
+    let mnx=1e9,mxx=-1e9,mny=1e9,mxy=-1e9;P.forEach(p=>{mnx=Math.min(mnx,p[0]);mxx=Math.max(mxx,p[0]);mny=Math.min(mny,p[1]);mxy=Math.max(mxy,p[1])});if(mxx<-50||mnx>W+50||mxy<-50||mny>H+50)return;
+    const fl=r[1]==='Flight';let pts=P;
+    if(fl){pts=[];for(let k=0;k<=24;k++){const u=k/24;pts.push([(1-u)*(1-u)*P[0][0]+2*u*(1-u)*ctl[0]+u*u*P[1][0],(1-u)*(1-u)*P[0][1]+2*u*(1-u)*ctl[1]+u*u*P[1][1]])}}
+    const W2=wobLine(pts,ri+1,fl?1.1:1.4);
+    // pencil: two passes with slight offset, like a hand-ruled dotted trail
+    for(let pass=0;pass<2;pass++){
+      ctx.beginPath();W2.forEach((p,i)=>{const x=p[0]+pass*.9,y=p[1]+pass*.7;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});
+      ctx.strokeStyle=pass?(fl?'rgba(200,85,61,.55)':'rgba(47,127,166,.6)'):OUT;
+      ctx.lineWidth=pass?2.4:(fl?2.6:2.2);
+      ctx.setLineDash(fl?[0.1,9]:[13,8]);ctx.lineDashOffset=pass*5;ctx.stroke()}
+    ctx.setLineDash([]);
+    // little drawn vehicle at the middle of the route
+    const m=W2[Math.floor(W2.length/2)];const k=clamp(.34+(z-6)*.03,.34,.5);
+    if(z<=11){ctx.save();ctx.translate(m[0],m[1]);ctx.scale(k,k);(fl?CRE.plane:CRE.boat)(ctx);ctx.restore()}
+  });
+  ctx.restore()}
+function routeLabels(s,ox,oy){
+  if(z<6.4||z>11)return;ctx.textBaseline='alphabetic';
+  for(const r of ROUTES){const{P,ctl}=routePts(r,s,ox,oy);let m;if(r[1]==='Flight'){const a=P[0],b=P[1];m=[.25*a[0]+.5*ctl[0]+.25*b[0],.25*a[1]+.5*ctl[1]+.25*b[1]]}else{const k=Math.floor(P.length/2);m=P[k]}
+    if(m[0]<0||m[0]>W||m[1]<0||m[1]>H)continue;tryLabel(r[0],m[0],m[1],'19px Caveat,cursive',r[1]==='Flight'?'#2c4a70':'#17565e','c',5)}}
+const TRANS=[["Aneityum Airport (Anatom Island)", "Airport", 169.77076, -20.24914, "OurAirports, code AUY"], ["Aniwa Airport", "Airport", 169.6009, -19.2346, "OurAirports, code AWD"], ["Bauerfield International Airport (Port Vila)", "Airport", 168.32001, -17.6993, "OurAirports, code VLI"], ["Craig Cove Airport", "Airport", 167.924, -16.265, "OurAirports, code CCV"], ["Dillon's Bay Airport", "Airport", 169.00101, -18.7694, "OurAirports, code DLY"], ["Forari Airport", "Airport", 168.52699, -17.7011, "OurAirports"], ["Futuna Airport (Futuna Island)", "Airport", 170.23199, -19.5164, "OurAirports, code FTA"], ["Gaua Island Airport", "Airport", 167.58701, -14.2181, "OurAirports, code ZGU"], ["Ipota Airport", "Airport", 169.28333, -18.85639, "OurAirports, code IPA"], ["Lamap Airport", "Airport", 167.82925, -16.46112, "OurAirports, code LPM"], ["Lamen Bay Airport", "Airport", 168.159, -16.5842, "OurAirports, code LNB"], ["Lenakel Airport", "Airport", 169.2625, -19.5161, "OurAirports"], ["Longana Airport", "Airport", 167.967, -15.3067, "OurAirports, code LOD"], ["Lonorore Airport", "Airport", 168.172, -15.8656, "OurAirports, code LNE"], ["Maewo-Naone Airport (Maewo Island)", "Airport", 168.08111, -14.99722, "OurAirports, code MWF"], ["Mota Lava Airport (Ablow)", "Airport", 167.71201, -13.666, "OurAirports, code MTV"], ["Norsup Airport", "Airport", 167.401, -16.0797, "OurAirports, code NUS"], ["North West Santo Airport (Olpoi)", "Airport", 166.558, -14.8817, "OurAirports, code OLJ"], ["Redcliffe Airport", "Airport", 167.83501, -15.472, "OurAirports, code RCL"], ["Santo Pekoa International Airport (Luganville)", "Airport", 167.22, -15.505, "OurAirports, code SON"], ["Sara Airport (Pentecost Island)", "Airport", 168.15199, -15.4708, "OurAirports, code SSR"], ["Siwo Airport (Emae Island)", "Airport", 168.343, -17.0903, "OurAirports, code EAE"], ["Sola Airport", "Airport", 167.537, -13.8517, "OurAirports, code SLH"], ["Southwest Bay Airport (Malekula Island)", "Airport", 167.4472, -16.4864, "OurAirports, code SWJ"], ["Tavie Airport (Paama Island)", "Airport", 168.23551, -16.43195, "OurAirports, code PBJ"], ["Tongoa Airport (Tongoa Island)", "Airport", 168.55099, -16.8911, "OurAirports, code TGH"], ["Torres Airstrip (Loh/Linua)", "Airport", 166.638, -13.328, "OurAirports, code TOH"], ["Uléi Airport (Ambrym Island)", "Airport", 168.3011, -16.3297, "OurAirports, code ULB"], ["Valesdir Airport (Epi Island)", "Airport", 168.177, -16.7961, "OurAirports, code VLS"], ["Walaha Airport", "Airport", 167.69099, -15.412, "OurAirports, code WLH"], ["Whitegrass Airport (Tanna Island)", "Airport", 169.224, -19.4551, "OurAirports, code TAH"], ["Port Vila waterfront ferry landing", "Ferry landing", 168.3133, -17.7395], ["Yachting World Marina (Port Vila)", "Marina", 168.3136, -17.7434], ["Hideaway Island ferry", "Ferry landing", 168.2665, -17.6935], ["Erakor Island ferry", "Ferry landing", 168.3106, -17.7723], ["Aore Resort Ferry (Luganville side)", "Ferry landing", 167.1805, -15.5157], ["Aore Resort Ferry (Aore side)", "Ferry landing", 167.1803, -15.5383], ["Malo boat landing", "Ferry landing", 167.1038, -15.5981], ["Epi Island ferry landing (Lamen Bay)", "Ferry landing", 168.1672, -16.5955], ["Inter-island ferry wharf (Tanna)", "Ferry terminal", 169.277, -19.551], ["Lenakel wharf (Tanna)", "Wharf", 169.2661, -19.5331], ["Port Resolution wharf (Tanna)", "Wharf", 169.4959, -19.5277], ["Ipota wharf (Erromango)", "Wharf", 169.2885, -18.8582], ["Mystery Island wharf (Aneityum)", "Wharf", 169.7751, -20.2477], ["Vao Landing (Malekula)", "Wharf", 167.3041, -15.9091], ["Litzlitz wharf (Malekula)", "Wharf", 167.4438, -16.1127], ["Uripiv wharf (Malekula)", "Wharf", 167.4257, -16.1041], ["Port Vila main port (World Port Index)", "Port", 168.31667, -17.73333, "World Port Index (NGA)"]];let transHit=[];
+function drawTrans(s,ox,oy){
+  transHit=[];const lab=[];
+  for(const p of TRANS){const ap=p[1]==='Airport';if(z<(ap?8.6:11.2))continue;const px=(mx(p[2])-cx)*s+ox,py=(my(p[3])-cy)*s+oy;if(px<-20||px>W+20||py<-20||py>H+20)continue;transHit.push([px,py,p]);
+    const r=ap?10:9;ctx.lineWidth=2;ctx.strokeStyle=OUT;ctx.fillStyle=ap?'#3a5f8a':'#1f6f78';ctx.beginPath();ctx.arc(px,py,r,0,7);ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#fff';ctx.fillStyle='#fff';ctx.lineCap='round';ctx.lineWidth=2.2;
+    if(ap){ctx.beginPath();ctx.moveTo(px-5,py+5);ctx.lineTo(px+5,py-5);ctx.stroke();ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(px-4,py-4);ctx.lineTo(px+4,py+4);ctx.stroke();ctx.beginPath();ctx.moveTo(px-5,py+1);ctx.lineTo(px-1,py+5);ctx.stroke()}
+    else{ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(px,py-5,1.7,0,7);ctx.stroke();ctx.beginPath();ctx.moveTo(px,py-3);ctx.lineTo(px,py+5);ctx.moveTo(px-3,py-1);ctx.lineTo(px+3,py-1);ctx.stroke();ctx.beginPath();ctx.arc(px,py+1,5,.15*Math.PI,.85*Math.PI);ctx.stroke()}}
+  if(z>=9.4){ctx.textBaseline='alphabetic';[...transHit].sort((a,b)=>(a[2][1]==='Airport'?0:1)-(b[2][1]==='Airport'?0:1)).forEach(h=>{if(h[2][1]==='Airport'||z>=13)tryLabel(h[2][0],h[0],h[1],'21px Caveat,cursive',h[2][1]==='Airport'?'#2c4a70':'#17565e','r',5)})}
+}
+let stayHit=[],hl=null;
+function drawStays(s,ox,oy){
+  stayHit=[];if(z<10.8)return;const big=z>=12.5;
+  for(const p of STAYS){const px=(mx(p[2])-cx)*s+ox,py=(my(p[3])-cy)*s+oy;if(px<-20||px>W+20||py<-20||py>H+20)continue;stayHit.push([px,py,p]);
+    if(!big){ctx.fillStyle='#7a4f9a';ctx.strokeStyle='#fbf3dc';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(px,py,4,0,7);ctx.fill();ctx.stroke();continue}
+    const r=9;ctx.lineWidth=2;ctx.strokeStyle=OUT;ctx.fillStyle='#7a4f9a';ctx.beginPath();ctx.moveTo(px-r+3,py-r);ctx.arcTo(px+r,py-r,px+r,py+r,3);ctx.arcTo(px+r,py+r,px-r,py+r,3);ctx.arcTo(px-r,py+r,px-r,py-r,3);ctx.arcTo(px-r,py-r,px+r,py-r,3);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff';ctx.fillRect(px-6,py+1,12,3);ctx.fillRect(px-6,py-4,2,8);ctx.beginPath();ctx.arc(px-2,py-1.5,2,0,7);ctx.fill();ctx.fillRect(px+0,py-3,6,3);
+  }
+  if(z>=13.6){ctx.textBaseline='alphabetic';const pr={Resort:0,Hotel:1};[...stayHit].sort((a,b)=>(pr[a[2][1]]??2)-(pr[b[2][1]]??2)).forEach(h=>tryLabel(h[2][0],h[0],h[1],'21px Caveat,cursive','#5a3a78','r',5))}
+}
+let tdown=null;const stip=document.createElement('div');stip.className='stip';stip.hidden=true;stage.appendChild(stip);
+stage.addEventListener('pointerdown',e=>{tdown=[e.clientX,e.clientY];stip.hidden=true;hl=null},true);
+stage.addEventListener('pointerup',e=>{if(!tdown||!(show.stays||show.trans))return;const mv=Math.hypot(e.clientX-tdown[0],e.clientY-tdown[1]);tdown=null;if(mv>6||e.target.closest('.card,.ctl,.legend,.pin,.wx,.wxp,.stip'))return;
+  const r=stage.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let best=null,bd=18;for(const h of stayHit.concat(show.trans?transHit:[])){const d=Math.hypot(h[0]-x,h[1]-y);if(d<bd){bd=d;best=h}}
+  if(!best)return;showStip(best[2],best[0],best[1])});
+function showStip(p,x,y){const r=stage.getBoundingClientRect();stip.innerHTML=`<b>${esc(p[0])}</b><small>${esc(p[1])} · from ${esc(p[4]||'OpenStreetMap')}</small><a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${p[3]},${p[2]}&travelmode=driving">Directions in Google Maps</a>`;stip.style.left=Math.min(Math.max(x,120),r.width-120)+'px';stip.style.top=Math.max(y,70)+'px';stip.hidden=false}
+const placed=[];
+function tryLabel(txt,px,py,font,col,anchor,halo){
+  ctx.font=font;const w=ctx.measureText(txt).width,h=parseInt(font.match(/(\d+)px/)[1],10);
+  const x=anchor==='c'?px-w/2:px+(anchor==='p'?14:8),y=py+h/3;const r=[x-2,y-h,x+w+2,y+5];
+  for(const q of placed){if(r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1])return false}
+  placed.push(r);ctx.lineJoin='round';ctx.lineWidth=halo;ctx.strokeStyle='rgba(251,243,220,.9)';ctx.strokeText(txt,x,y);ctx.fillStyle=col;ctx.fillText(txt,x,y);return true;
+}
+function drawLabels(s,ox,oy){
+  const P=store['places.json'];if(!P)return;placed.length=0;
+  for(const p of D.pois){const px=(mx(p.lon)-cx)*s+ox,py=(my(p.lat)-cy)*s+oy;placed.push([px-17,py-52,px+28,py-12])}
+  const cand=[];
+  for(const p of P){const c=p[1];let ok=false,pri=c;
+    if(c===4){const a=p[4]||0;ok=a>0.06?(z>=5&&z<=10.5):a>0.004?(z>=8&&z<=11.5):(z>=10&&z<=12.5);pri=a>0.06?-2:-1}
+    else if(c===0)ok=z>=5;else if(c===1)ok=z>=7;else if(c===2)ok=z>=10;else ok=z>=12.5;
+    if(!ok)continue;const px=(mx(p[2])-cx)*s+ox,py=(my(p[3])-cy)*s+oy;if(px<-60||px>W+60||py<-30||py>H+30)continue;cand.push([pri,p,px,py])}
+  cand.sort((a,b)=>a[0]-b[0]);ctx.textBaseline='alphabetic';
+  for(const [pri,p,px,py] of cand){const c=p[1];
+    if(c===4){const big=(p[4]||0)>0.06;tryLabel(p[0],px,py,`${big?34:24}px "Caveat Brush",cursive`,'#2f6f8f','c',4);continue}
+    const sz=[34,27,23,20][c];const col=c===0?'#8e2f22':'#3b2a14';
+    if(!tryLabel(p[0],px,py,`${sz}px Caveat,cursive`,col,'r',5))continue;
+    ctx.fillStyle=c===0?'#c8553d':'#3b2a14';ctx.beginPath();ctx.arc(px,py,c===0?5:2.2,0,7);ctx.fill();if(c===0){ctx.lineWidth=1.5;ctx.strokeStyle=OUT;ctx.stroke()}
+  }
+}
+// ---------- pins & chrome ----------
+const pinEls={};let sel=null,saved=new Set(),active=new Set(Object.keys(D.cats)),q='',trailOnly=false;
+try{saved=new Set(JSON.parse(localStorage.getItem('efate-saved')||'[]'))}catch(e){}
+function persist(){try{localStorage.setItem('efate-saved',JSON.stringify([...saved]))}catch(e){}}
+const IC={
+ volcano:'<path d="M3 20 9 8h6l6 12z"/><path d="M10 8 8 4M14 8l2-4M12 7V3"/>',
+ falls:'<path d="M5 3h14M8 3v18M12 3v14M16 3v18"/><path d="M5 21h14"/>',
+ beach:'<path d="M12 21V9"/><path d="M12 9c-4-4-8-2-9 0M12 9c4-4 8-2 9 0M12 9c-2-5-6-5-7-3M12 9c2-5 6-5 7-3"/><path d="M3 21h18"/>',
+ fish:'<path d="M3 12c4-6 11-6 15 0-4 6-11 6-15 0z"/><path d="M18 12l4-4v8z"/><circle cx="8" cy="11" r="1"/>',
+ ship:'<path d="M3 15h18l-3 5H6z"/><path d="M12 3v12M12 4l6 8h-6"/>',
+ market:'<path d="M4 9h16l-2 11H6z"/><path d="M8 9a4 4 0 0 1 8 0"/>',
+ cup:'<path d="M5 9h14c0 6-3 10-7 10S5 15 5 9z"/><path d="M8 5c1 1-1 2 0 3M12 4c1 1-1 2 0 3M16 5c1 1-1 2 0 3"/>',
+ mask:'<path d="M12 3c5 0 8 3 8 8 0 6-4 10-8 10s-8-4-8-10c0-5 3-8 8-8z"/><path d="M8 10h2M14 10h2M9 16c2 1.5 4 1.5 6 0"/>',
+ plane:'<path d="M2 14l20-9-8 17-3-7z"/>',
+ town:'<path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/><path d="M10 20v-6h4v6"/>',
+ peak:'<path d="M2 20 9 7l4 7 3-4 6 10z"/>',
+ anchor:'<circle cx="12" cy="5" r="2"/><path d="M12 7v14M6 12h12M5 15c1 4 4 6 7 6s6-2 7-6"/>',
+ boat:'<path d="M3 15h18l-3 5H6z"/><path d="M12 4v11M12 5 7 13"/>',
+ monument:'<path d="M12 3l3 5v11H9V8z"/><path d="M6 21h12"/>',
+ ruins:'<path d="M4 20V10h5v10M13 20V6h7v14M3 20h18"/>',
+ drum:'<ellipse cx="12" cy="8" rx="7" ry="3"/><path d="M5 8v8c0 1.7 3.1 3 7 3s7-1.3 7-3V8"/><path d="M8 12l2 6M16 12l-2 6"/>',
+ lake:'<path d="M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0"/>'
+};
+const SYM={market:'market',museum:'mask',seafront:'anchor',nakamal:'cup',erakor:'beach',ekasup:'mask',pango:'beach',hideaway:'fish',mele:'falls',roimata:'mask',havannah:'fish',rarru:'falls',bluelagoon:'lake',eton:'beach',airport:'plane',
+ yasur:'volcano',portres:'anchor',yakel:'mask',tannablue:'lake',champagne:'beach',luganville:'town',milliondollar:'fish',coolidge:'ship',matevulu:'lake',nanda:'lake',riri:'lake',portolry:'beach',tabwemasana:'peak',
+ marum:'volcano',ranon:'mask',landdive:'mask',lakatoro:'town',southwestbay:'mask',lamap:'boat',lamenbay:'fish',ambae:'volcano',lopevi:'volcano',sola:'mask',gaua:'volcano',mystery:'beach',anelghowhat:'boat',erromango:'peak',sp_ww2_museum:'ruins',efate_ww2:'ruins',havannah_ww2:'ruins',johnfrum:'drum',independence:'drum',festnapuan:'drum',oceanswim:'drum',vilaevents:'drum',roots:'drum',nalawan:'drum',vanualava:'drum',warmemorial:'monument',queiros:'monument',missionhouse:'ruins',tranquillity:'ship',lelepa:'fish',ngunapele:'fish',aorefan:'fish',tutuba:'fish',uripiv:'fish'};
+const symSvg=p=>`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[SYM[p.id]||'peak']}</svg>`;
+D.pois.forEach(p=>{const b=document.createElement('button');b.className='pin';b.style.setProperty('--c',D.cats[p.c].c);b.innerHTML='<span class="n">'+p.i+'</span><span class="nm"></span>';b.querySelector('.nm').textContent=p.n;b.querySelector('.nm').style.display='none';b.setAttribute('aria-label',p.n);
+  b.addEventListener('pointerdown',e=>e.stopPropagation());b.addEventListener('click',e=>{e.stopPropagation();select(p.id,true)});pinlayer.appendChild(b);pinEls[p.id]=b});
+const NS='http://www.w3.org/2000/svg';const leaders=document.createElementNS(NS,'svg');leaders.id='leaders';pinlayer.insertBefore(leaders,pinlayer.firstChild);
+const clusters=[];function getCluster(i){if(!clusters[i]){const c=document.createElement('button');c.className='pin cluster';c.addEventListener('pointerdown',e=>e.stopPropagation());pinlayer.appendChild(c);clusters[i]=c}return clusters[i]}
+let islSel='';const visible=p=>(active.has(p.c)||(p.k&&active.has('sea'))||(p.x&&active.has(p.x)))&&(!islSel||p.isl===islSel)&&(!trailOnly||saved.has(p.id))&&(!q||(' '+norm(p.n+' '+p.isl)).includes(' '+norm(q)));
+function updatePins(s,ox,oy){
+  const cell=z<12.6?54:0;const pts=[];
+  D.pois.forEach(p=>{const e=pinEls[p.id];e.style.display='none';if(!visible(p)&&!(sel===p.id))return;pts.push({p,x:(mx(p.lon)-cx)*s+ox,y:(my(p.lat)-cy)*s+oy})});
+  const groups=[];
+  if(cell){const used=new Set();pts.forEach((a,i)=>{if(used.has(i))return;const g=[a];used.add(i);pts.forEach((b,j)=>{if(used.has(j))return;if(Math.abs(a.x-b.x)<cell&&Math.abs(a.y-b.y)<cell&&sel!==b.p.id&&sel!==a.p.id){g.push(b);used.add(j)}});groups.push(g)})}
+  else pts.forEach(a=>groups.push([a]));
+  let ci=0;const rects=[],singles=[];
+  {const cd=$('card');if(!cd.hidden){const sr=stage.getBoundingClientRect(),cr=cd.getBoundingClientRect();rects.push([cr.left-sr.left-6,cr.top-sr.top-6,cr.right-sr.left+6,cr.bottom-sr.top+6])}}
+  groups.forEach(g=>{
+    if(g.length===1){singles.push(g[0]);return}
+    const x=g.reduce((t,a)=>t+a.x,0)/g.length,y=g.reduce((t,a)=>t+a.y,0)/g.length;if(x<-40||x>W+40||y<-40||y>H+40)return;
+    const c=getCluster(ci++);c.style.display='flex';c.style.left=x+'px';c.style.top=y+'px';c.textContent=g.length;c.setAttribute('aria-label',g.length+' places: zoom in');rects.push([x-24,y-24,x+24,y+24]);
+    const ids=g.map(a=>a.p);c.onclick=e=>{e.stopPropagation();const b={w:Math.min(...ids.map(p=>p.lon)),e:Math.max(...ids.map(p=>p.lon)),s:Math.min(...ids.map(p=>p.lat)),n:Math.max(...ids.map(p=>p.lat))};const padw=Math.max(.02,(b.e-b.w)*.25),padh=Math.max(.02,(b.n-b.s)*.25);fitTo({w:b.w-padw,e:b.e+padw,s:b.s-padh,n:b.n+padh},1)}});
+  for(let i=ci;i<clusters.length;i++)if(clusters[i])clusters[i].style.display='none';
+  // callout boxes with leader lines
+  leaders.setAttribute('width',W);leaders.setAttribute('height',H);leaders.innerHTML='';
+  singles.sort((a,b)=>(sel===b.p.id)-(sel===a.p.id));
+  const hit=(r)=>rects.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]);
+  singles.forEach(a=>{
+    const e=pinEls[a.p.id],nm=e.querySelector('.nm');if(a.x<-60||a.x>W+60||a.y<-60||a.y>H+60)return;
+    const named=z>=11.8||sel===a.p.id;nm.style.display=named?'':'none';
+    const w=named?Math.min(52+a.p.n.length*7,40+190):36,h=30;
+    const cands=[[20,-44],[20,14],[-20-w,-44],[-20-w,14],[-w/2,-58],[-w/2,28],[34,-15],[-34-w,-15]];
+    let best=null;for(const [dx,dy] of cands){const r=[a.x+dx,a.y+dy,a.x+dx+w,a.y+dy+h];if(r[0]<2||r[2]>W-2||r[1]<2||r[3]>H-2)continue;if(!hit(r)){best=[dx,dy,r];break}}
+    if(!best){const [dx,dy]=cands[0];best=[dx,dy,[a.x+dx,a.y+dy,a.x+dx+w,a.y+dy+h]]}
+    const r=best[2];rects.push([r[0]-3,r[1]-3,r[2]+3,r[3]+3]);
+    e.style.display='flex';e.style.left=r[0]+'px';e.style.top=r[1]+'px';e.classList.toggle('sel',sel===a.p.id);e.classList.remove('dim');
+    const px=Math.max(r[0],Math.min(r[2],a.x)),py=Math.max(r[1],Math.min(r[3],a.y)),col=D.cats[a.p.c].c;
+    leaders.insertAdjacentHTML('beforeend',`<line x1="${px}" y1="${py}" x2="${a.x}" y2="${a.y}" stroke="#4a3522" stroke-width="2"/><circle cx="${a.x}" cy="${a.y}" r="13" fill="#f7efd9" stroke="${col}" stroke-width="3"/><circle cx="${a.x}" cy="${a.y}" r="15" fill="none" stroke="#4a3522" stroke-width="1.5"/><svg x="${a.x-8}" y="${a.y-8}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a3522" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[SYM[a.p.id]||'peak']}</svg>`);
+  });
+}
+function updateChrome(){
+  const lat=180/Math.PI*Math.atan(Math.sinh(Math.PI-2*Math.PI*cy));
+  const mpp=40075016.686*Math.cos(lat*Math.PI/180)/S();let m=mpp*100;const pow=Math.pow(10,Math.floor(Math.log10(m)));const f=m/pow;const nice=(f>=5?5:f>=2?2:1)*pow;
+  $('scale').innerHTML=(nice>=1000?(nice/1000)+' km':nice+' m')+`<b style="width:${(nice/mpp).toFixed(0)}px"></b>`;
+}
+// ---------- view control ----------
+function minZ(){const xs=mx(COUNTRY.e)-mx(COUNTRY.w),ys=my(COUNTRY.s)-my(COUNTRY.n);return Math.log2(Math.min(W/xs,H/ys)/256)-0.1}
+function limit(){z=clamp(z,minZ(),18);const b=[mx(165.5),my(-12.0),mx(171.3),my(-21.3)];cx=clamp(cx,b[0],b[2]);cy=clamp(cy,b[1],b[3])}
+function fitTo(b,pad=1.12){const x0=mx(b.w),x1=mx(b.e),y0=my(b.n),y1=my(b.s);flyTo((x0+x1)/2,(y0+y1)/2,Math.log2(Math.min(W/((x1-x0)*pad),H/((y1-y0)*pad))/256))}
+let fly=null;
+function flyTo(tx,ty,tz){fly={t0:performance.now(),sx:cx,sy:cy,sz:z,tx,ty,tz};stepFly()}
+function stepFly(){if(!fly)return;const t=clamp((performance.now()-fly.t0)/550,0,1),e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+  cx=fly.sx+(fly.tx-fly.sx)*e;cy=fly.sy+(fly.ty-fly.sy)*e;z=fly.sz+(fly.tz-fly.sz)*e;limit();draw();if(t<1)requestAnimationFrame(stepFly);else fly=null}
+function zoomAbout(px,py,nz){const s0=S();const wx=cx+(px-W/2)/s0,wy=cy+(py-H/2)/s0;z=clamp(nz,minZ(),18);const s1=S();cx=wx-(px-W/2)/s1;cy=wy-(py-H/2)/s1;limit();schedule()}
+function resize(){const r=stage.getBoundingClientRect();W=Math.max(200,r.width);H=Math.max(200,r.height);dpr=Math.min(2,window.devicePixelRatio||1);cv.width=W*dpr;cv.height=H*dpr;seaPat=null;landPat=null;limit();schedule()}
+new ResizeObserver(resize).observe(stage);
+const ptrs=new Map();
+stage.addEventListener('pointerdown',e=>{if(e.target.closest('.card,.ctl,.legend'))return;fly=null;stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);stage.style.cursor='grabbing'});
+stage.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;const prev=ptrs.get(e.pointerId);const cur=[e.clientX,e.clientY];
+  if(ptrs.size===1){cx-=(cur[0]-prev[0])/S();cy-=(cur[1]-prev[1])/S();limit();schedule()}
+  else if(ptrs.size===2){const o=[...ptrs.entries()].find(([id])=>id!==e.pointerId)[1];const d0=Math.hypot(prev[0]-o[0],prev[1]-o[1]),d1=Math.hypot(cur[0]-o[0],cur[1]-o[1]);
+    const r=stage.getBoundingClientRect();const mxp=(cur[0]+o[0])/2-r.left,myp=(cur[1]+o[1])/2-r.top;cx-=((cur[0]-prev[0])/2)/S();cy-=((cur[1]-prev[1])/2)/S();if(d0>0)zoomAbout(mxp,myp,z+Math.log2(d1/d0))}
+  ptrs.set(e.pointerId,cur)});
+const up=e=>{ptrs.delete(e.pointerId);stage.style.cursor='grab'};stage.addEventListener('pointerup',up);stage.addEventListener('pointercancel',up);
+stage.addEventListener('wheel',e=>{e.preventDefault();fly=null;const r=stage.getBoundingClientRect();zoomAbout(e.clientX-r.left,e.clientY-r.top,z-e.deltaY*0.0016*(e.deltaMode?30:1))},{passive:false});
+$('zin').onclick=()=>zoomAbout(W/2,H/2,z+1);$('zout').onclick=()=>zoomAbout(W/2,H/2,z-1);
+$('zefate').onclick=()=>fitTo(EFATE);$('zall').onclick=()=>fitTo(COUNTRY,1.02);
+document.querySelectorAll('.lay input').forEach(i=>i.onchange=()=>{show[i.dataset.l]=i.checked;schedule()});
+
+// ---------- side panel ----------
+const LSYM=(css)=>`<span class="sym" style="${css}"></span>`;
+$('leg').innerHTML=Object.keys(D.cats).map(k=>`<div><span class="sw" style="--c:${D.cats[k].c}"></span>${D.cats[k].n}</div>`).join('')+'<hr>'+[
+ [LSYM('border-radius:50%;width:14px;height:14px;background:#7a4fa0;margin:1px 6px'),'Hotel, resort or guesthouse (zoom in; number is beds where known)'],
+ [LSYM('border-radius:50%;width:14px;height:14px;background:#3a86a8;border:2px solid #4a3522;margin:1px 6px'),'Airport'],
+ [LSYM('border-radius:50%;width:14px;height:14px;background:#2a9d8f;border:2px solid #4a3522;margin:1px 6px'),'Port or ferry wharf'],
+ [LSYM('border-top:3px dashed #3a86a8;top:7px'),'Flight route (tick Flights and ferries in Map layers)'],
+ [LSYM('border-top:3px dashed #2a9d8f;top:7px'),'Ferry route, drawn around the islands'],
+ [LSYM('border:3px solid #c0392b;border-radius:50%;width:14px;height:14px;margin:1px 6px'),'Search result ring']
+].map(([sy,t])=>`<div class="row">${sy}<span>${t}</span></div>`).join('');
+const chips=$('chips');
+Object.keys(D.cats).forEach(k=>{const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',D.cats[k].c);b.setAttribute('aria-pressed','true');
+  b.innerHTML=`<i></i>${D.cats[k].n}`;b.onclick=()=>{active.has(k)?active.delete(k):active.add(k);b.setAttribute('aria-pressed',active.has(k));renderList()};chips.appendChild(b)});
+const ISL=[...new Set(D.pois.map(p=>p.isl))];$('islChip').textContent=ISL.length+' islands';
+$('isl').innerHTML='<option value="">All islands</option>'+ISL.map(i=>`<option>${i}</option>`).join('');
+$('isl').onchange=e=>{islSel=e.target.value;renderList();const L=D.pois.filter(p=>!islSel||p.isl===islSel);if(!L.length)return;if(!islSel){fitTo(COUNTRY,1.02);return}const lo=L.map(p=>p.lon),la=L.map(p=>p.lat);const pw=Math.max(.05,(Math.max(...lo)-Math.min(...lo))*.3),ph=Math.max(.05,(Math.max(...la)-Math.min(...la))*.3);fitTo({w:Math.min(...lo)-pw,e:Math.max(...lo)+pw,s:Math.min(...la)-ph,n:Math.max(...la)+ph},1)};
+$('q').oninput=e=>{q=e.target.value.toLowerCase();renderList()};
+$('tAll').onclick=()=>{trailOnly=false;renderList()};$('tTrail').onclick=()=>{trailOnly=true;renderList()};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function renderList(){
+  $('tAll').setAttribute('aria-selected',!trailOnly);$('tTrail').setAttribute('aria-selected',trailOnly);$('tTrail').textContent='My trail ('+saved.size+')';$('expb').hidden=!(trailOnly&&saved.size);
+  const L=D.pois.filter(visible);$('prog').textContent=L.length+' of '+D.pois.length;
+  const el=$('list');el.innerHTML='';
+  if(!L.length){el.innerHTML='<div class="empty">'+(trailOnly?'Nothing on your trail yet. Open a place and press "Add to my trail".':'No places match. Turn a filter back on or clear the search.')+'</div>'}
+  L.forEach(p=>{const b=document.createElement('button');b.className='it';b.style.setProperty('--c',D.cats[p.c].c);if(sel===p.id)b.setAttribute('aria-current','true');
+    b.innerHTML=`<span class="num">${p.i}</span><span><b>${esc(p.n)}</b><small>${esc(p.isl)} · ${esc(p.t)}</small><span class="tag">${esc(D.cats[p.c].n)}</span>${p.k?`<span class="tag tk">${esc(p.k)}</span>`:''}${p.h?`<span class="tag th">${esc(p.h)}</span>`:''}</span><span class="mark"><span class="lsy">${symSvg(p)}</span>${saved.has(p.id)?'<br>⭐':''}</span>`;
+    b.onclick=()=>select(p.id,true);el.appendChild(b)});
+  $('countChip').textContent=D.pois.length+' places';schedule();
+}
+function fromPV(p){const R=6371,r=Math.PI/180,la=-17.7334,lo=168.3273;
+  const a=Math.sin((p.lat-la)*r/2)**2+Math.cos(la*r)*Math.cos(p.lat*r)*Math.sin((p.lon-lo)*r/2)**2,km=2*R*Math.asin(Math.sqrt(a));
+  if(km<1.5)return 'In Port Vila.';
+  if(p.isl==='Efate'){const rd=km*1.4,min=Math.round(rd/40*60/5)*5;return 'About '+Math.round(km)+' km in a straight line, roughly '+Math.max(10,min)+' minutes by road (estimate).'}
+  const fl=Math.round((km/450*60+25)/5)*5;return 'About '+Math.round(km/10)*10+' km by air, roughly '+fl+' minutes on a domestic flight (estimate), plus local transfers.'}
+function card(p){
+  const c=$('card');if(!p){c.hidden=true;return}
+  c.hidden=false;
+  c.innerHTML=`<button class="x" aria-label="Close">×</button><h2>${esc(p.n)}</h2><div class="sub">${esc(p.isl)} · ${esc(D.cats[p.c].n)} · ${esc(p.t)}${p.k?' · '+esc(p.k):''}${p.h?' · '+esc(p.h):''}</div><p>${esc(p.d)}</p><dl><dt>Tip</dt><dd>${esc(p.tip)}</dd><dt>From Port Vila</dt><dd class="pv">${esc(fromPV(p))}</dd></dl>
+  <div class="acts"><button class="btn ${saved.has(p.id)?'on':'pri'}" id="svBtn">${saved.has(p.id)?'On my trail ✓':'Add to my trail'}</button><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}&travelmode=driving">Directions in Google Maps</a></div>`;
+  c.querySelector('.x').onclick=()=>select(null);
+  $('svBtn').onclick=()=>{saved.has(p.id)?saved.delete(p.id):saved.add(p.id);persist();card(p);renderList()};
+}
+
+// ---------- search everything on the map ----------
+const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const TIER={'Guide place':0,Airport:.2,City:.25,Town:.25,Island:.25,Volcano:.25,Peak:.25,Village:.5,Hamlet:.7};
+const PCLS=['City','Town','Village','Hamlet','Island'];
+function searchAll(term){
+  const n=norm(term.trim());if(n.length<2)return[];const out=[],seen=new Set();
+  const add=(name,type,lon,lat,zz,act)=>{const nm=norm(name);const i=nm.indexOf(n);if(i<0)return;const k=nm+'|'+type+'|'+Math.round(lon*200)+'|'+Math.round(lat*200);if(seen.has(k))return;seen.add(k);out.push({name,type,lon,lat,zz,act,rank:(i===0?0:nm.includes(' '+n)?1:2)+2*(TIER[type]??0.4)})};
+  D.pois.forEach(p=>add(p.n,'Guide place',p.lon,p.lat,13.2,()=>select(p.id,true)));
+  STAYS.forEach(p=>add(p[0],p[1],p[2],p[3],16.2,()=>setTimeout(()=>{const s=S();showStip(p,(mx(p[2])-cx)*s+W/2,(my(p[3])-cy)*s+H/2)},950)));
+  TRANS.forEach(p=>add(p[0],p[1],p[2],p[3],p[1]==='Airport'?13:15.5,()=>setTimeout(()=>{const s=S();showStip(p,(mx(p[2])-cx)*s+W/2,(my(p[3])-cy)*s+H/2)},950)));
+  const P=store['places.json'];if(P)P.forEach(p=>add(p[0],PCLS[p[1]]||'Place',p[2],p[3],p[1]===4?((p[4]||0)>0.06?8.5:11):p[1]<=1?13:14.5));
+  const dc=store['decor.json'];if(dc&&dc.peaks)dc.peaks.forEach(p=>add(p[3],(p[2]===0?'Volcano':'Peak')+(p[4]?' · '+p[4].toLocaleString('en-GB')+' m':''),p[0],p[1],13));
+  out.sort((a,b)=>a.rank-b.rank||a.name.length-b.name.length);
+  const keep=[];out.forEach(r=>{const key=norm(r.name.replace(/\(.*?\)/g,'')).replace(/\s+/g,' ').trim();
+    if(keep.some(k=>k.key===key&&Math.abs(k.r.lon-r.lon)<.06&&Math.abs(k.r.lat-r.lat)<.06))return;keep.push({key,r})});
+  return keep.map(k=>k.r).slice(0,9);
+}
+const sres=$('sres');let sList=[];
+function pick(r){sres.hidden=true;stage.scrollIntoView&&0;if(r.type!=='Guide place'){hl=[r.lon,r.lat];flyTo(mx(r.lon),my(r.lat),Math.max(r.zz,Math.min(z,r.zz+1)));}r.act&&r.act();schedule()}
+function showRes(){const term=$('q').value;if(norm(term.trim()).length<2){sres.hidden=true;return}
+  sList=searchAll(term);sres.innerHTML=sList.length?'':'<div class="none">No match on the map. Try another spelling.</div>';
+  sList.forEach(r=>{const b=document.createElement('button');b.type='button';b.innerHTML='<span></span><small></small>';b.firstChild.textContent=r.name;b.lastChild.textContent=r.type;b.onclick=()=>pick(r);sres.appendChild(b)});sres.hidden=false}
+$('q').addEventListener('input',showRes);
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&sList.length&&!sres.hidden){e.preventDefault();pick(sList[0])}else if(e.key==='Escape')sres.hidden=true;else if(e.key==='ArrowDown'&&!sres.hidden){const b=sres.querySelector('button');b&&(e.preventDefault(),b.focus())}});
+sres.addEventListener('keydown',e=>{const bs=[...sres.querySelectorAll('button')],i=bs.indexOf(document.activeElement);if(e.key==='ArrowDown'&&bs[i+1]){e.preventDefault();bs[i+1].focus()}else if(e.key==='ArrowUp'){e.preventDefault();(bs[i-1]||$('q')).focus()}});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('.sw2'))sres.hidden=true});
+function select(id,fl){
+  sel=id;const p=D.pois.find(x=>x.id===id);card(p);renderList();renderRing();
+  if(p&&fl)flyTo(mx(p.lon),my(p.lat),Math.max(z,13.2));
+}
+
+window.addEventListener('scroll',()=>{document.body.classList.toggle('compact',window.scrollY>140)},{passive:true});
+// ---- itinerary page and export ----
+const trailPois=()=>[...saved].map(id=>D.pois.find(p=>p.id===id)).filter(Boolean);
+const csvq=v=>'"'+String(v).replace(/"/g,'""')+'"';
+function itinCsv(){const L=trailPois();return '﻿'+['Order,Place,Island,Category,Time needed,Tip,From Port Vila (estimate),Latitude,Longitude,Notes'].concat(L.map((p,i)=>[i+1,csvq(p.n),csvq(p.isl),csvq(D.cats[p.c].n),csvq(p.t),csvq(p.tip),csvq(fromPV(p)),p.lat,p.lon,csvq(p.d)].join(','))).join('\r\n')+'\r\n'}
+function itinGpx(){const L=trailPois(),x=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Vanuatu guide" xmlns="http://www.topografix.com/GPX/1/1">\n<metadata><name>My Vanuatu trail</name></metadata>\n'+
+   L.map((p,i)=>`<wpt lat="${p.lat}" lon="${p.lon}"><name>${i+1}. ${x(p.n)}</name><desc>${x(p.isl+'. '+p.t+'. '+p.tip)}</desc></wpt>`).join('\n')+
+   '\n<trk><name>Trail in saved order</name><trkseg>\n'+L.map(p=>`<trkpt lat="${p.lat}" lon="${p.lon}"><name>${x(p.n)}</name></trkpt>`).join('\n')+'\n</trkseg></trk>\n</gpx>\n'}
+function itinBody(){const L=trailPois(),d=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  return '<h1>My Vanuatu trail</h1><p><small>Made '+d+'. Times and distances from Port Vila are estimates. Check schedules, fees and weather locally.</small></p><ol>'+L.map(p=>`<li><b>${esc(p.n)}</b> (${esc(p.isl)}, ${esc(p.t)})<br>${esc(p.d)}<br><small>Tip: ${esc(p.tip)}<br>From Port Vila: ${esc(fromPV(p))}<br>Position: ${p.lat.toFixed(4)}, ${p.lon.toFixed(4)}</small></li>`).join('')+'</ol>'}
+function itinHtml(){return '<!doctype html><html lang="en-GB"><meta charset="utf-8"><title>My Vanuatu trail</title><style>body{font:15px/1.5 Georgia,serif;max-width:720px;margin:24px auto;padding:0 16px;color:#222}h1{font-size:26px}li{margin:0 0 14px;break-inside:avoid}small{color:#555}@media print{body{margin:0}}</style><body>'+itinBody()+'<p><small>Open this file in a browser and use Print, then Save as PDF if you want a copy.</small></p></body></html>'}
+const crcT=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+const crc32=b=>{let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=crcT[(c^b[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0};
+function makeZip(files){const enc=new TextEncoder(),parts=[],cen=[];let off=0;const u16=v=>[v&255,v>>8&255],u32=v=>[v&255,v>>8&255,v>>16&255,v>>24&255];
+  files.forEach(([name,txt])=>{const nb=enc.encode(name),db=enc.encode(txt),c=crc32(db);
+    const lh=new Uint8Array([0x50,0x4b,3,4,...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(c),...u32(db.length),...u32(db.length),...u16(nb.length),...u16(0)]);
+    parts.push(lh,nb,db);
+    cen.push(new Uint8Array([0x50,0x4b,1,2,...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(c),...u32(db.length),...u32(db.length),...u16(nb.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),nb);
+    off+=lh.length+nb.length+db.length});
+  const cl=cen.reduce((a,b)=>a+b.length,0);
+  const end=new Uint8Array([0x50,0x4b,5,6,0,0,0,0,...u16(files.length),...u16(files.length),...u32(cl),...u32(off),0,0]);
+  return new Blob([...parts,...cen,end],{type:'application/zip'})}
+function itMsg(t,bad){const m=$('itmsg');m.textContent=t;m.className=bad?'bad':'ok'}
+async function itSave(filename,data,okText){
+  if(typeof claude==='undefined'){try{const blob=data instanceof Blob?data:new Blob([data],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);itMsg(okText)}catch(e){itMsg('Could not save the file. Use Print instead.',true)}return}
+  let dl=null;try{dl=await claude.use('downloads')}catch(e){}
+  if(!dl){itMsg('Saving files is not available in this view. Open the guide in the Claude app or a browser, or use Print.',true);return}
+  try{await dl.save({filename,data});itMsg(okText)}catch(e){const c=e&&e.code;itMsg(c==='declined'?'Save cancelled.':c==='host_unavailable'?'This app cannot save files. Open the guide in a browser or on a computer.':'Could not save the file ('+(c||'error')+').',c!=='declined')}}
+function renderItin(){const L=trailPois(),el=$('itlist');
+  $('itcount').textContent=L.length+(L.length===1?' place':' places');
+  el.innerHTML='';
+  if(!L.length){el.innerHTML='<div class="note">Nothing on your trail yet. Close this page, open a place and choose Add to my trail.</div>'}
+  L.forEach((p,i)=>{const li=document.createElement('div');li.className='itrow';
+    li.innerHTML=`<span class="num" style="background:${D.cats[p.c].c}">${i+1}</span><span class="itx"><b>${esc(p.n)}</b><small>${esc(p.isl)} · ${esc(p.t)}</small><small>${esc(fromPV(p))}</small></span><span class="itb"><button data-a="up" aria-label="Move up" ${i?'':'disabled'}>↑</button><button data-a="dn" aria-label="Move down" ${i<L.length-1?'':'disabled'}>↓</button><button data-a="rm" aria-label="Remove">✕</button></span>`;
+    li.querySelectorAll('button').forEach(b=>b.onclick=()=>{const ids=[...saved],k=ids.indexOf(p.id),a=b.dataset.a;
+      if(a==='up'&&k>0)[ids[k-1],ids[k]]=[ids[k],ids[k-1]];else if(a==='dn'&&k<ids.length-1)[ids[k+1],ids[k]]=[ids[k],ids[k+1]];else if(a==='rm')ids.splice(k,1);
+      saved=new Set(ids);persist();renderItin();renderList();if(sel){const q=D.pois.find(x=>x.id===sel);q&&card(q)}schedule()});
+    el.appendChild(li)});
+  document.querySelectorAll('#itin .acts2 button').forEach(b=>b.disabled=!L.length);
+  const g=$('itGmap'),M=L.slice(0,11),ll=q=>q.lat+','+q.lon;g.style.display=L.length?'':'none';
+  if(L.length)g.href='https://www.google.com/maps/dir/?api=1&destination='+ll(M[M.length-1])+(M.length>1?'&origin='+ll(M[0]):'')+(M.length>2?'&waypoints='+encodeURIComponent(M.slice(1,-1).map(ll).join('|')):'');
+  g.textContent=L.length>11?'Route in Google Maps (first 11 stops)':'Route in Google Maps'}
+$('itBtn').onclick=()=>{$('itin').hidden=false;document.body.classList.add('itopen');itMsg('');renderItin();$('itin').scrollTop=0};
+$('itClose').onclick=()=>{$('itin').hidden=true;document.body.classList.remove('itopen')};
+$('itCsv').onclick=()=>itSave('vanuatu-trail.csv',itinCsv(),'Saved. Open the CSV file in a spreadsheet.');
+$('itGpx').onclick=()=>itSave('vanuatu-trail-gpx.zip',makeZip([['vanuatu-trail.gpx',itinGpx()],['vanuatu-trail.csv',itinCsv()]]),'Saved. Unzip it, then open the GPX file in your phone navigation app.');
+$('itHtml').onclick=()=>itSave('vanuatu-trail.html',itinHtml(),'Saved. Open the file in a browser to print or save as PDF.');
+$('itPrint').onclick=()=>{$('itpr').innerHTML=itinBody();try{window.print()}catch(e){itMsg('Printing is blocked in this view. Use Save printable page instead.',true)}};
+// ring road
+const PLANS={
+ efate:{name:'Efate ring road',desc:'One sealed road circles the whole island: about 2.5 hours of driving, so give it 6 hours with swim stops. Tap a stop to find it on the map.',steps:[['Early morning','mele','Leave Port Vila and head north-west to Mele Cascades while the pools are quiet and cool.'],
+ ['Mid-morning','hideaway','Optional detour: snorkel at Hideaway Island and post a card from the underwater post office.'],
+ ['Late morning','havannah','Round the north-west to Havannah Harbour for snorkelling and a long lunch. Few shops en route, so eat here.'],
+ ['Early afternoon','bluelagoon','Follow the sealed road along the north and east coasts to Blue Lagoon on the south-east side. Swim and use the rope swings, ideally after the midday crowds.'],
+ ['Mid-afternoon','eton','Cool down on the sand at Eton Beach, a short hop from the lagoon.'],
+ ['Late afternoon','rarru','Head back west along the south coast and stop at Rarru Cascades near Rentapao.'],
+ ['Sunset','pango','Finish near town with sunset at Pango Point, then the seafront or a kava bar.']]},
+ santo:{name:'Santo day',desc:'Espiritu Santo is a flight from Port Vila. Base yourself in Luganville and use a hired driver or a tour for the longer drives. The roads are rougher than Efate, so allow plenty of time and check distances locally.',steps:[['Early morning','milliondollar','Start with snorkelling at Million Dollar Point, where the Allied forces dumped equipment into the sea after the Second World War. It is close to Luganville.'],
+ ['Mid-morning','sp_ww2_museum','Visit the museum in Luganville for the story of the large American base here.'],
+ ['Midday','matevulu','Head east to the Matevulu Blue Hole for a swim and lunch. Take cash for the entry fee.'],
+ ['Afternoon','champagne','Continue to Champagne Beach on the north-east coast, one of the best-known beaches in Vanuatu. Go before or after any cruise ship visit.'],
+ ['Evening','luganville','Return to Luganville for dinner by the waterfront. The SS President Coolidge wreck dive needs its own day with a licensed operator.']]},
+ tanna:{name:'Tanna day',desc:'Tanna is a flight from Port Vila. Roads are rough and most visits use a 4x4 with a local guide, usually arranged by your guesthouse. Check the volcano alert level before going up Mount Yasur.',steps:[['Morning','yakel','Visit Yakel, a custom village, with a local guide. Ask about customs, photography and any fee before you go.'],
+ ['Midday','tannablue','Swim at the Tanna Blue Hole if the weather has been dry.'],
+ ['Afternoon','portres','Drive to Port Resolution on the south-east coast for the bay and a quiet stretch of coast.'],
+ ['Late afternoon','yasur','Time the Mount Yasur crater visit for dusk, when the glow is best. Take a torch, water and warm layers, and follow your guide at all times.']]}};
+let planKey='efate';
+function steps(){return PLANS[planKey].steps}
+function renderRing(){const el=$('ringlist');el.innerHTML='';$('plandesc').textContent=PLANS[planKey].desc;const ps=$('plansel');ps.innerHTML='';Object.keys(PLANS).forEach(k=>{const b=document.createElement('button');b.textContent=PLANS[k].name;b.setAttribute('aria-pressed',k===planKey);b.onclick=()=>{planKey=k;renderRing();const f=PLANS[k].steps[0][1],p=D.pois.find(x=>x.id===f);p&&flyTo(mx(p.lon),my(p.lat),11)};ps.appendChild(b)});steps().forEach(([t,id,txt])=>{const p=D.pois.find(x=>x.id===id);const b=document.createElement('button');b.className='it';b.style.setProperty('--c',D.cats[p.c].c);if(sel===id)b.setAttribute('aria-current','true');
+  b.innerHTML=`<span class="num">${p.i}</span><span><span class="tm">${t}</span><b>${esc(p.n)}</b><small>${esc(txt)}</small></span><span></span>`;b.onclick=()=>select(id,true);el.appendChild(b)})}
+// modes
+document.querySelectorAll('.modebar button').forEach(b=>b.onclick=()=>{const m=b.dataset.mode;document.querySelectorAll('.modebar button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  ['things','ring','plan'].forEach(n=>$('p-'+n).hidden=n!==m)});
+
+// ---- weather snapshot (Port Vila, Santo, Tanna) ----
+let WX={"asof": "2026-11-25", "loc": "Port Vila", "cur": {"temperature": 28.4, "condition": "cloudy"}, "days": [{"date": "2026-11-25", "high": 28.6, "low": 24.7, "precipitation_chance": 20, "condition": "cloudy"}, {"date": "2026-11-26", "high": 29.0, "low": 25.0, "precipitation_chance": 55, "condition": "thunderstorm"}, {"date": "2026-11-27", "high": 28.7, "low": 24.6, "precipitation_chance": 20, "condition": "drizzle"}, {"date": "2026-11-28", "high": 28.5, "low": 24.3, "precipitation_chance": 35, "condition": "thunderstorm"}, {"date": "2026-11-29", "high": 29.5, "low": 24.0, "precipitation_chance": 35, "condition": "thunderstorm"}, {"date": "2026-11-30", "high": 30.3, "low": 24.0, "precipitation_chance": 15, "condition": "partly_cloudy"}, {"date": "2026-12-01", "high": 30.1, "low": 24.0, "precipitation_chance": 15, "condition": "partly_cloudy"}, {"date": "2026-12-02", "high": 29.6, "low": 25.0, "precipitation_chance": 30, "condition": "drizzle"}], "updated": "2026-11-25T03:25:00Z", "isl": {"Port Vila": {"cur": {"temperature": 28.4, "condition": "cloudy"}, "days": [{"date": "2026-11-25", "high": 28.6, "low": 24.7, "precipitation_chance": 20, "condition": "cloudy"}, {"date": "2026-11-26", "high": 29.0, "low": 25.0, "precipitation_chance": 55, "condition": "thunderstorm"}, {"date": "2026-11-27", "high": 28.7, "low": 24.6, "precipitation_chance": 20, "condition": "drizzle"}, {"date": "2026-11-28", "high": 28.5, "low": 24.3, "precipitation_chance": 35, "condition": "thunderstorm"}, {"date": "2026-11-29", "high": 29.5, "low": 24.0, "precipitation_chance": 35, "condition": "thunderstorm"}, {"date": "2026-11-30", "high": 30.3, "low": 24.0, "precipitation_chance": 15, "condition": "partly_cloudy"}, {"date": "2026-12-01", "high": 30.1, "low": 24.0, "precipitation_chance": 15, "condition": "partly_cloudy"}, {"date": "2026-12-02", "high": 29.6, "low": 25.0, "precipitation_chance": 30, "condition": "drizzle"}]}, "Santo": {"cur": {"temperature": 26.4, "condition": "drizzle"}, "days": [{"date": "2026-11-25", "high": 28.1, "low": 23.1, "precipitation_chance": 65, "condition": "drizzle"}, {"date": "2026-11-26", "high": 29.3, "low": 23.8, "precipitation_chance": 20, "condition": "partly_cloudy"}, {"date": "2026-11-27", "high": 28.8, "low": 22.9, "precipitation_chance": 35, "condition": "thunderstorm"}, {"date": "2026-11-28", "high": 29.6, "low": 22.6, "precipitation_chance": 15, "condition": "sunny"}, {"date": "2026-11-29", "high": 30.6, "low": 22.7, "precipitation_chance": 15, "condition": "partly_cloudy"}, {"date": "2026-11-30", "high": 31.1, "low": 23.0, "precipitation_chance": 20, "condition": "partly_cloudy"}, {"date": "2026-12-01", "high": 30.6, "low": 22.8, "precipitation_chance": 40, "condition": "partly_cloudy"}, {"date": "2026-12-02", "high": 30.5, "low": 23.4, "precipitation_chance": 15, "condition": "partly_cloudy"}]}, "Tanna": {"cur": {"temperature": 29.2, "condition": "cloudy"}, "days": [{"date": "2026-11-25", "high": 29.5, "low": 24.2, "precipitation_chance": 35, "condition": "cloudy"}, {"date": "2026-11-26", "high": 28.0, "low": 23.8, "precipitation_chance": 65, "condition": "thunderstorm"}, {"date": "2026-11-27", "high": 29.2, "low": 23.3, "precipitation_chance": 25, "condition": "cloudy"}, {"date": "2026-11-28", "high": 28.1, "low": 22.8, "precipitation_chance": 55, "condition": "rain"}, {"date": "2026-11-29", "high": 29.4, "low": 22.7, "precipitation_chance": 35, "condition": "thunderstorm"}, {"date": "2026-11-30", "high": 30.3, "low": 23.0, "precipitation_chance": 30, "condition": "thunderstorm"}, {"date": "2026-12-01", "high": 30.4, "low": 23.1, "precipitation_chance": 20, "condition": "drizzle"}, {"date": "2026-12-02", "high": 29.2, "low": 23.4, "precipitation_chance": 45, "condition": "drizzle"}]}}};
+const SK='stroke="#4a3522" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"';
+const CLOUD=(f)=>`<path d="M26 66Q10 66 12 52 14 40 30 42 32 24 52 26 64 12 78 26 94 24 96 42 106 54 96 66Z" transform="translate(-4 4) scale(.92)" fill="${f}" ${SK}/>`;
+const SUN=(x,y,r)=>`<g ${SK}><path d="M${x} ${y-r-12}v-9M${x} ${y+r+3}v9M${x-r-12} ${y}h-9M${x+r+3} ${y}h9M${x-r-7} ${y-r-7}l-6-6M${x+r+7} ${y-r-7}l6-6" fill="none"/><circle cx="${x}" cy="${y}" r="${r}" fill="#e3b64f"/></g>`;
+const WXI={
+ sunny:()=>`<svg viewBox="0 0 100 100" aria-hidden="true">${SUN(50,50,20)}</svg>`,
+ partly_cloudy:()=>`<svg viewBox="0 0 100 100" aria-hidden="true">${SUN(36,36,15)}${CLOUD('#fff')}</svg>`,
+ cloudy:()=>`<svg viewBox="0 0 100 100" aria-hidden="true">${CLOUD('#e8eef0')}</svg>`,
+ drizzle:()=>`<svg viewBox="0 0 100 100" aria-hidden="true">${CLOUD('#dfe8ea')}<path d="M34 84l-3 8M52 84l-3 8M70 84l-3 8" fill="none" stroke="#3a86a8" stroke-width="4" stroke-linecap="round"/></svg>`,
+ rain:()=>`<svg viewBox="0 0 100 100" aria-hidden="true">${CLOUD('#cfdce2')}<path d="M30 80l-5 14M46 80l-5 14M62 80l-5 14M78 80l-5 14" fill="none" stroke="#3a86a8" stroke-width="5" stroke-linecap="round"/></svg>`,
+ thunderstorm:()=>`<svg viewBox="0 0 100 100" aria-hidden="true">${CLOUD('#c3cfd6')}<path d="M54 68l-12 16h10l-6 14 18-20H52l8-10z" fill="#e3b64f" ${SK.replace('3.5','2.5')}/></svg>`
+};
+WXI.clear=WXI.sunny;
+const wxIcon=c=>(WXI[c]||WXI.cloudy)();
+const WXN={sunny:'Sunny',partly_cloudy:'Partly cloudy',cloudy:'Cloudy',drizzle:'Drizzle',rain:'Rain',thunderstorm:'Thunderstorms'};
+let WI='Port Vila',WDOM='Efate';
+const WLOC={'Port Vila':[168.33,-17.73],'Santo':[167.17,-15.52],'Tanna':[169.27,-19.53]};
+const ICEN=(()=>{const m={};D.pois.forEach(p=>{(m[p.isl]=m[p.isl]||[0,0,0]);m[p.isl][0]+=p.lon;m[p.isl][1]+=p.lat;m[p.isl][2]++});Object.keys(m).forEach(k=>m[k]=[m[k][0]/m[k][2],m[k][1]/m[k][2]]);return m})();
+const dd=(a,b)=>Math.hypot((a[0]-b[0])*Math.cos(a[1]*Math.PI/180),a[1]-b[1]);
+function wxDom(){const c=[cx*360-180,Math.atan(Math.sinh(Math.PI*(1-2*cy)))*180/Math.PI];
+  let best=null,bd=1e9;for(const k in ICEN){const d=dd(c,ICEN[k]);if(d<bd){bd=d;best=k}}
+  if(best&&best!==WDOM){WDOM=best;const f=/Efate/i.test(best)?'Port Vila':/Santo/i.test(best)?'Santo':/Tanna/i.test(best)?'Tanna':Object.keys(WLOC).reduce((a,k)=>dd(ICEN[best],WLOC[k])<dd(ICEN[best],WLOC[a])?k:a,'Port Vila');WI=f;renderWx()}}
+function wxFor(isl){return /Efate/i.test(isl)?'Port Vila':/Santo/i.test(isl)?'Santo':/Tanna/i.test(isl)?'Tanna':Object.keys(WLOC).reduce((a,k)=>dd(ICEN[isl]||WLOC['Port Vila'],WLOC[k])<dd(ICEN[isl]||WLOC['Port Vila'],WLOC[a])?k:a,'Port Vila')}
+function renderWx(){
+  const t=new Date(),iso=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+  WI=wxFor(WDOM);
+  const isl=WX.isl&&WX.isl[WI]?WX.isl[WI]:WX;const days=(isl.days||[]).filter(d=>d.date>=iso);const day=days[0]||null;
+  const age=(Date.now()-Date.parse(WX.updated||WX.asof))/36e5;
+  const cur=(age<3&&isl.cur)?{c:isl.cur.condition,t:Math.round(isl.cur.temperature)}:day?{c:day.condition,t:Math.round(day.high)}:{c:'sunny',t:null};
+  const fmt=d=>new Date(d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short'});
+  const up=WX.updated?new Date(WX.updated).toLocaleString('en-GB',{weekday:'short',hour:'2-digit',minute:'2-digit'}):fmt(WX.asof);
+  const same=wxFor(WDOM)===(/Efate/i.test(WDOM)?'Port Vila':/Santo/i.test(WDOM)?'Santo':/Tanna/i.test(WDOM)?'Tanna':'');
+  const sub=same?'Forecast for '+WI:'Nearest forecast: '+WI;
+  const stale=age>=3?' · out of date':'';
+  $('wxbar').innerHTML=`<div class="wxnow"><span class="wxi">${wxIcon(cur.c)}</span><span class="tt">${cur.t==null?'--':cur.t+'°'}</span><span class="ll"><b>${esc(WDOM)}</b><small>${esc(WXN[cur.c]||cur.c)} · ${esc(sub)}</small><small>Updated ${esc(up)}${stale}</small></span></div><div class="wxdays">${days.map((d,i)=>`<div class="wxd"><b>${i?fmt(d.date):'Today'}</b><span class="wi">${wxIcon(d.condition)}</span><span>${Math.round(d.high)}°/${Math.round(d.low)}°</span><span>${d.precipitation_chance}%</span></div>`).join('')||'<div class="wxd">Forecast has run out</div>'}</div>`;
+}
+renderWx();
+function loadWx(){fetch('data/weather.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.days&&j.days.length){WX=j;renderWx()}}).catch(()=>{})}
+loadWx();setInterval(loadWx,15*60*1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadWx()});
+
+(function(){const _d=draw;draw=function(){_d();try{wxDom()}catch(e){}}})();
+resize();{const x0=mx(EFATE.w),x1=mx(EFATE.e),y0=my(EFATE.n),y1=my(EFATE.s);z=Math.log2(Math.min(W/((x1-x0)*1.12),H/((y1-y0)*1.3))/256);cx=(x0+x1)/2;cy=(y0+y1)/2;limit()}
+renderList();renderRing();draw();
+</script>
+
+</body>
+</html>
