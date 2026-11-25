@@ -6,7 +6,7 @@
 <title>Vanuatu: Interactive Guide</title>
 <meta name="description" content="A hand-drawn interactive map and guide to Vanuatu: things to do, dive sites, volcanoes, history, annual events, hotels, airports, day plans and a trip planner.">
 <meta name="theme-color" content="#2f5d6b">
-<meta property="og:title" content="Vanuatu: Interactive Guide"><meta property="og:description" content="A hand-drawn interactive map and guide to Vanuatu, starting on Port Vila and Efate."><meta property="og:type" content="website">
+<meta property="og:title" content="Vanuatu: Interactive Guide"><meta property="og:description" content="A hand-drawn interactive map and guide to Vanuatu, showing the whole country, with the weather bar on Port Vila."><meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23add9df' stroke='%232b1e16' stroke-width='3'/%3E%3Ccircle cx='44' cy='20' r='7' fill='%23f5b800'/%3E%3Cpath d='M32 54V30' stroke='%232b1e16' stroke-width='5' fill='none'/%3E%3Cpath d='M32 30c-8-8-17-4-19 0M32 30c8-8 17-4 19 0M32 30c-4-10-12-10-15-6M32 30c4-10 12-10 15-6' stroke='%232eb85c' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Caveat:wght@500;700&family=Patrick+Hand&family=Space+Mono:wght@400;700&display=swap">
 <style>
@@ -73,6 +73,7 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 .ctl button{width:44px;height:44px;border:2px solid var(--ink);background:var(--paper);border-radius:12px;font-family:var(--f-display);font-size:22px;line-height:1;box-shadow:3px 3px 0 var(--ink)}
 .ctl button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 .ctl button.w{width:auto;padding:0 10px;font-size:15px;height:38px}
+.ctl button.on{background:#2f7fa6;color:#fff}
 .legend{position:absolute;left:12px;top:12px;z-index:3;background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:8px 12px;font-size:15px;box-shadow:3px 3px 0 var(--ink);max-width:240px}
 .legend #leg>div{display:flex;align-items:center;gap:8px;margin:2px 0}
 .legend .sw{width:16px;height:16px;border-radius:50%;background:var(--c);border:2px solid var(--ink);flex:none}
@@ -199,7 +200,7 @@ a{color:var(--red-d)}
         <div class="info"><h2>Between the islands</h2><ul><li>Flights: Air Vanuatu connects Port Vila to Santo and Tanna with its larger planes, and smaller aircraft serve other islands such as Malekula, Ambrym, Ambae and Epi. Dashed blue lines on the map show routes listed by the airline and tourism office. Schedules change, so check before you plan.</li><li>Ferries: Vanuatu Ferry and Big Sista sail Port Vila to Malekula to Luganville, about 24 hours end to end. The MV Tauraken sails Port Vila to Erromango to Tanna, sometimes on to Aneityum. The MV Brisk and MV Tina serve Ambrym. Dashed green lines show these, drawn around the islands. Ports and end points are approximate.</li></ul></div>
         <div class="info"><h2>When to go</h2><ul><li>The drier months, roughly May to October, are most comfortable. The wetter cyclone season runs roughly November to April, so check forecasts and stay flexible.</li><li>Cruise ships crowd Blue Lagoon, Mele Cascades, Champagne Beach and Mystery Island. Go early or late. Land diving on Pentecost runs on Saturdays from about April to June.</li></ul></div>
         <div class="info"><h2>Cyclone season</h2><ul><li>Tropical cyclones can hit Vanuatu from about November to April, most often from January to March. Flights and ferries can be cancelled at short notice, so leave spare days and take travel insurance.</li><li>Follow official warnings from the Vanuatu Meteorology and Geo-hazards Department and ask your accommodation about local advice. Volcano alert levels for Tanna, Ambrym and Ambae are published by the same department.</li></ul></div>
-        <div class="info"><h2>Map data</h2><ul><li>Roads, rivers, villages and houses: © OpenStreetMap contributors (Open Database Licence), extracted by Geofabrik on 22 November 2026, including the island outlines. Weather: forecasts from Open-Meteo.com (licence CC BY 4.0), refreshed about hourly.</li><li>Airport positions and codes: OurAirports (public domain). Port Vila main port position: the World Port Index published by the United States National Geospatial-Intelligence Agency. Other wharves, landings and marinas come from OpenStreetMap.</li><li>Place descriptions draw on the Vanuatu Tourism Office, Lonely Planet and information from Air Vanuatu and the ferry operators. The Ramada Resort by Wyndham Port Vila was added from a hotel listing because it is missing from OpenStreetMap. Distances and times from Port Vila are estimates. Hours, fees, tides and schedules change, so check locally.</li></ul></div>
+        <div class="info"><h2>Map data</h2><ul><li>Roads, rivers, villages and houses: © OpenStreetMap contributors (Open Database Licence), extracted by Geofabrik on 22 November 2026, including the island outlines. Weather: forecasts from an online weather service, refreshed about hourly.</li><li>Airport positions and codes: OurAirports (public domain). Port Vila main port position: the World Port Index published by the United States National Geospatial-Intelligence Agency. Other wharves, landings and marinas come from OpenStreetMap.</li><li>Place descriptions draw on the Vanuatu Tourism Office, Lonely Planet and information from Air Vanuatu and the ferry operators. The Ramada Resort by Wyndham Port Vila was added from a hotel listing because it is missing from OpenStreetMap. Distances and times from Port Vila are estimates. Hours, fees, tides and schedules change, so check locally.</li></ul></div>
       </div>
     </section>
   </aside>
@@ -209,7 +210,7 @@ a{color:var(--red-d)}
     <div id="pinlayer"></div>
     
     <div class="status" id="status">Loading…</div>
-    <div class="ctl"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zefate" class="w" aria-label="Fit Efate">Efate</button><button id="zall" class="w" aria-label="Fit Vanuatu">All</button></div>
+    <div class="ctl"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zefate" class="w" aria-label="Fit Efate">Efate</button><button id="zall" class="w" aria-label="Fit Vanuatu">All</button><button id="zloc" class="w" aria-label="Show my location on the map">My location</button></div>
     <div class="legend"><details><summary>What's on the map</summary><div id="leg"></div><div class="note">Drawn by hand, not to scale. Zoom in for real roads, rivers and houses.</div></details></div>
     <article class="card" id="card" hidden></article>
     <div class="scale" id="scale"></div>
@@ -444,6 +445,7 @@ function draw(){
   if(show.trans)drawTrans(s,ox,oy);
   if(show.routes)routeLabels(s,ox,oy);
   if(hl){const px=(mx(hl[0])-cx)*s+ox,py=(my(hl[1])-cy)*s+oy;ctx.lineWidth=3;ctx.strokeStyle='#c8553d';ctx.beginPath();ctx.arc(px,py,15,0,7);ctx.stroke();ctx.globalAlpha=.45;ctx.beginPath();ctx.arc(px,py,24,0,7);ctx.stroke();ctx.globalAlpha=1}
+  drawMe(s,ox,oy);
   updatePins(s,ox,oy);updateChrome();
 }
 
@@ -623,6 +625,7 @@ $('leg').innerHTML=Object.keys(D.cats).map(k=>`<div><span class="sw" style="--c:
  [LSYM('border-radius:50%;width:14px;height:14px;background:#2a9d8f;border:2px solid #4a3522;margin:1px 6px'),'Port or ferry wharf'],
  [LSYM('border-top:3px dashed #3a86a8;top:7px'),'Flight route (tick Flights and ferries in Map layers)'],
  [LSYM('border-top:3px dashed #2a9d8f;top:7px'),'Ferry route, drawn around the islands'],
+ [LSYM('border-radius:50%;width:14px;height:14px;background:#2f7fa6;border:3px solid #fbf3dc;box-shadow:0 0 0 2px #4a3522;margin:1px 6px'),'Your location (tap My location; it stays on your device)'],
  [LSYM('border:3px solid #c0392b;border-radius:50%;width:14px;height:14px;margin:1px 6px'),'Search result ring']
 ].map(([sy,t])=>`<div class="row">${sy}<span>${t}</span></div>`).join('');
 const chips=$('chips');
@@ -786,6 +789,7 @@ const ICEN=(()=>{const m={};D.pois.forEach(p=>{(m[p.isl]=m[p.isl]||[0,0,0]);m[p.
 const dd=(a,b)=>Math.hypot((a[0]-b[0])*Math.cos(a[1]*Math.PI/180),a[1]-b[1]);
 function wxDom(){const c=[cx*360-180,Math.atan(Math.sinh(Math.PI*(1-2*cy)))*180/Math.PI];
   let best=null,bd=1e9;for(const k in ICEN){const d=dd(c,ICEN[k]);if(d<bd){bd=d;best=k}}
+  if(z<minZ()+0.8)best='Efate'; // whole-country view: forecast stays on Port Vila
   if(best&&best!==WDOM){WDOM=best;const f=/Efate/i.test(best)?'Port Vila':/Santo/i.test(best)?'Santo':/Tanna/i.test(best)?'Tanna':Object.keys(WLOC).reduce((a,k)=>dd(ICEN[best],WLOC[k])<dd(ICEN[best],WLOC[a])?k:a,'Port Vila');WI=f;renderWx()}}
 function wxFor(isl){return /Efate/i.test(isl)?'Port Vila':/Santo/i.test(isl)?'Santo':/Tanna/i.test(isl)?'Tanna':Object.keys(WLOC).reduce((a,k)=>dd(ICEN[isl]||WLOC['Port Vila'],WLOC[k])<dd(ICEN[isl]||WLOC['Port Vila'],WLOC[a])?k:a,'Port Vila')}
 function renderWx(){
@@ -805,8 +809,34 @@ renderWx();
 function loadWx(){fetch('data/weather.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.days&&j.days.length){WX=j;renderWx()}}).catch(()=>{})}
 loadWx();setInterval(loadWx,15*60*1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadWx()});
 
+// ---- your location (asked for only when you tap the button; never sent anywhere) ----
+let me=null,meWatch=null;
+function drawMe(s,ox,oy){
+  if(!me)return;const px=(mx(me.lon)-cx)*s+ox,py=(my(me.lat)-cy)*s+oy;if(px<-400||px>W+400||py<-400||py>H+400)return;
+  const rr=me.acc/(40075016.686*Math.cos(me.lat*Math.PI/180)/s);
+  if(rr>14){ctx.beginPath();ctx.arc(px,py,Math.min(rr,400),0,7);ctx.fillStyle='rgba(47,127,166,.14)';ctx.fill();ctx.lineWidth=1.5;ctx.strokeStyle='rgba(47,127,166,.5)';ctx.stroke()}
+  ctx.beginPath();ctx.arc(px,py,11,0,7);ctx.fillStyle='#fbf3dc';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=OUT;ctx.stroke();
+  ctx.beginPath();ctx.arc(px,py,7,0,7);ctx.fillStyle='#2f7fa6';ctx.fill();
+  ctx.font='24px Caveat,cursive';ctx.textBaseline='alphabetic';ctx.lineJoin='round';ctx.lineWidth=5;ctx.strokeStyle='rgba(251,243,220,.95)';
+  const t='You are here',w=ctx.measureText(t).width;ctx.strokeText(t,px-w/2,py-18);ctx.fillStyle='#1f4a63';ctx.fillText(t,px-w/2,py-18)}
+function meMsg(t){const e=$('status');e.textContent=t;e.style.display='block';clearTimeout(meMsg.t);meMsg.t=setTimeout(()=>{e.textContent='Loading…';status()},6000)}
+function kmFrom(a,b){const r=Math.PI/180,h=Math.sin((b.lat-a.lat)*r/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin((b.lon-a.lon)*r/2)**2;return 12742*Math.asin(Math.sqrt(h))}
+function goMe(){
+  if(!me)return;
+  const inside=me.lon>=COUNTRY.w-.4&&me.lon<=COUNTRY.e+.4&&me.lat>=COUNTRY.s-.4&&me.lat<=COUNTRY.n+.4;
+  if(!inside){const near={lon:(COUNTRY.w+COUNTRY.e)/2,lat:(COUNTRY.s+COUNTRY.n)/2};meMsg('You are about '+(Math.round(kmFrom(me,near)/10)*10).toLocaleString('en-GB')+' km from Vanuatu, so you are off this map.');return}
+  flyTo(mx(me.lon),my(me.lat),Math.max(z,12))}
+$('zloc').onclick=()=>{
+  if(me){goMe();return}
+  if(meWatch!=null)return;
+  if(!navigator.geolocation){meMsg('Location is not available on this device.');return}
+  $('zloc').classList.add('on');meMsg('Finding you…');
+  meWatch=navigator.geolocation.watchPosition(p=>{const first=!me;me={lon:p.coords.longitude,lat:p.coords.latitude,acc:p.coords.accuracy||50};if(first)goMe();schedule()},err=>{
+    navigator.geolocation.clearWatch(meWatch);meWatch=null;me=null;$('zloc').classList.remove('on');
+    meMsg(err&&err.code===1?'Location was blocked. Allow it for this page in your browser or app settings, then tap again.':'Could not find your location. Try again outdoors or with a better signal.');schedule()},{enableHighAccuracy:true,maximumAge:15000,timeout:20000})};
+
 (function(){const _d=draw;draw=function(){_d();try{wxDom()}catch(e){}}})();
-resize();{const x0=mx(EFATE.w),x1=mx(EFATE.e),y0=my(EFATE.n),y1=my(EFATE.s);z=Math.log2(Math.min(W/((x1-x0)*1.12),H/((y1-y0)*1.3))/256);cx=(x0+x1)/2;cy=(y0+y1)/2;limit()}
+resize();{const x0=mx(COUNTRY.w),x1=mx(COUNTRY.e),y0=my(COUNTRY.n),y1=my(COUNTRY.s);z=Math.log2(Math.min(W/((x1-x0)*1.02),H/((y1-y0)*1.02))/256);cx=(x0+x1)/2;cy=(y0+y1)/2;limit()}
 renderList();renderRing();draw();
 </script>
 
