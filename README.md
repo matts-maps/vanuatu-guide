@@ -18,6 +18,11 @@ Open a command prompt in this folder.
 4. After a minute the guide is at `https://matts-maps.github.io/vanuatu-guide/`.
 5. For the hourly weather: Settings, Actions, General, Workflow permissions, choose Read and write permissions, and save. Then open the Actions tab, choose Update weather and press Run workflow once to test it.
 
+## Sharing and offline use
+- `share.png` is the preview image used when the link is shared (1200 by 630 pixels). `manifest.webmanifest` and `icons/` let people add the guide to a phone home screen.
+- `sw.js` is a service worker that saves the page, fonts and the map areas people have viewed, so the guide still opens without a signal. Pages and the weather are fetched fresh whenever there is a connection. Change `VERSION` in `sw.js` if you change its list of precached files.
+- The map fonts are served from `fonts/` (SIL Open Font Licence, see `fonts/OFL.txt`), so visitors do not contact Google.
+
 ## Weather
 `.github/workflows/update-weather.yml` runs every hour and runs `scripts/update_weather.py`. The script reads Open-Meteo for Port Vila, Santo and Tanna and rewrites `data/weather.json`, and the workflow commits it when it changes. GitHub switches off scheduled workflows after 60 days without repository activity, so open Actions and re-enable it if the weather bar starts showing "out of date". The guide itself marks forecasts older than three hours as out of date.
 
@@ -29,6 +34,6 @@ Everything lives in this repository. The build scripts and raw source data are i
 - Coastlines: Natural Earth (public domain) and the Global Self-consistent Hierarchical High-resolution Geography database.
 - Airports: OurAirports (public domain). Port Vila main port: World Port Index, United States National Geospatial-Intelligence Agency.
 - Weather: Open-Meteo.com, licence CC BY 4.0. The full list is on the data sources page (`data-sources.html`), linked from the footer.
-- Map fonts: Google Fonts (Caveat, Caveat Brush, Patrick Hand, Space Mono).
+- Map fonts: Caveat, Caveat Brush, Patrick Hand and Space Mono, SIL Open Font Licence 1.1, files in `fonts/`.
 
 No licence file is included yet. Choose one before inviting others to reuse the code.
