@@ -8,7 +8,7 @@ Run from the build folder: python add_peak_elevations.py
 import csv, json, math, sys
 src = sys.argv[1] if len(sys.argv) > 1 else '../source-data/vanuatu-peaks-ele.csv'
 rows = list(csv.DictReader(open(src, encoding='utf-8')))
-dec = json.load(open('../../data/decor.json'))
+dec = json.load(open('../../data/decor.json', encoding='utf-8'))
 out, dropped = [], []
 for p in dec['peaks']:
     p = p[:4]
@@ -19,5 +19,5 @@ for p in dec['peaks']:
         dropped.append((p[3] or 'unnamed', ele)); continue
     out.append(p + [ele])
 dec['peaks'] = out
-json.dump(dec, open('../../data/decor.json', 'w'), separators=(',', ':'), ensure_ascii=False)
+json.dump(dec, open('../../data/decor.json', 'w', encoding='utf-8', newline=''), separators=(',', ':'), ensure_ascii=False)
 print(len(out), 'kept;', 'with height:', sum(1 for p in out if p[4] is not None), '; removed:', dropped)

@@ -21,7 +21,7 @@ def blob(lon,lat,rx_m,ry_m,rot=0,n=18):
         xr=x*math.cos(rot)-y*math.sin(rot);yr=x*math.sin(rot)+y*math.cos(rot)
         out.append((lon+xr/(111320*math.cos(math.radians(lat))),lat+yr/110540))
     return out
-L=json.load(open('land_before_islets.json'))
+L=json.load(open('land_before_islets.json', encoding='utf-8'))
 ISL=[(168.3097,-17.7736,260,200,0.3),   # Erakor Island
      (168.3098,-17.7435,190,150,0.5),   # Iririki Island
      (168.2633,-17.6965,150,110,0.2)]   # Hideaway Island
@@ -48,7 +48,7 @@ for lon,lat,rx,ry,rot in ISL:
         poly=hull.simplify(0.00003)
     print(lon,lat,len(pts),round(poly.area*1e10/1e6),'m2-ish')
     L.append(enc(list(poly.exterior.coords)))
-json.dump(L,open('../../data/land.json','w'),separators=(',',':'))
+json.dump(L,open('../../data/land.json','w', encoding='utf-8', newline=''),separators=(',',':'))
 land=unary_union([Polygon(dec(o)).buffer(0) for o in L])
 # land-based pins that miss the land: snap in
 SNAP={'tannablue','champagne'}

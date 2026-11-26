@@ -2,7 +2,7 @@ import json,heapq,math
 from shapely.geometry import Polygon,LineString,Point,MultiPoint
 from shapely.ops import unary_union,nearest_points
 from shapely.prepared import prep
-L=json.load(open('../../data/land.json'))
+L=json.load(open('../../data/land.json', encoding='utf-8'))
 def dec(o):
     x,y=o[0],o[1];pts=[(x/1e5,y/1e5)]
     for i in range(2,len(o),2): x+=o[i];y+=o[i+1];pts.append((x/1e5,y/1e5))
@@ -59,4 +59,4 @@ if __name__=='__main__':
     for a,b in LEGS:
         p=route(ST[a],ST[b]);out[a+'-'+b]=[(round(x,4),round(y,4)) for x,y in p]
         print(a,b,len(p),out[a+'-'+b][:6])
-    json.dump(out,open('route_legs.json','w'))
+    json.dump(out,open('route_legs.json','w', encoding='utf-8', newline=''))

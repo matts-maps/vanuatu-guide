@@ -23,4 +23,4 @@ for sr in r.iterShapeRecords():
         c=list(ls.simplify([.00002,.00002,.00002,.00002,.00003,.00003][t]).coords)
         if len(c)>=2:out[t].append(enc(c))
 for i,L in enumerate(out):
-    p=f'../../data/roads{i+1}.json';json.dump(L,open(p,'w'),separators=(',',':'));print(p,len(L),os.path.getsize(p)//1024,'KB')
+    p=f'../../data/roads{i+1}.json';json.dump(L,open(p,'w', encoding='utf-8', newline=''),separators=(',',':'));print(p,len(L),os.path.getsize(p)//1024,'KB')

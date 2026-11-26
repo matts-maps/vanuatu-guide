@@ -13,9 +13,9 @@ def parts(s):
     pts=s.points; idx=list(s.parts)+[len(pts)]
     return [pts[idx[i]:idx[i+1]] for i in range(len(idx)-1)]
 def dump(name,obj):
-    p='../../data/'+name; json.dump(obj,open(p,'w'),separators=(',',':'),ensure_ascii=False); print(name,os.path.getsize(p)//1024,'KB')
+    p='../../data/'+name; json.dump(obj,open(p,'w', encoding='utf-8', newline=''),separators=(',',':'),ensure_ascii=False); print(name,os.path.getsize(p)//1024,'KB')
 # land (Natural Earth rings, whole country)
-d=json.load(open('../source-data/natural-earth-land.geojson'))
+d=json.load(open('../source-data/natural-earth-land.geojson', encoding='utf-8'))
 W,E,S,N=166.3,170.5,-20.5,-12.9
 rings=[]
 for f in d['features']:
@@ -92,6 +92,6 @@ for sr in r.iterShapeRecords():
 print('buildings',n,'cells',len(cells))
 idx={}
 for (ix,iy),L in cells.items():
-    nm=f'b_{ix}_{iy}.json'; json.dump(L,open('../../data/'+nm,'w'),separators=(',',':')); idx[f'{ix}_{iy}']=len(L)
+    nm=f'b_{ix}_{iy}.json'; json.dump(L,open('../../data/'+nm,'w', encoding='utf-8', newline=''),separators=(',',':')); idx[f'{ix}_{iy}']=len(L)
 dump('bcells.json',{'cell':CELL,'n':idx})
 print('total KB',sum(os.path.getsize('../../data/'+f) for f in os.listdir('../../data'))//1024,'files',len(os.listdir('../../data')),'time',round(time.time()-t0))

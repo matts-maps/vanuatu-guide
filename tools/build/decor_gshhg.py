@@ -9,14 +9,14 @@ def enc(pts):
     o=[xs[0],ys[0]]
     for i in range(1,len(xs)): o+=[xs[i]-xs[i-1],ys[i]-ys[i-1]]
     return o
-rings=[r for r in json.load(open('gshhg_rings.json')) if min(p[0] for p in r)>=166.3 and max(p[0] for p in r)<=170.5 and max(p[1] for p in r)<=-12.9 and min(p[1] for p in r)>=-20.5]
+rings=[r for r in json.load(open('gshhg_rings.json', encoding='utf-8')) if min(p[0] for p in r)>=166.3 and max(p[0] for p in r)<=170.5 and max(p[1] for p in r)<=-12.9 and min(p[1] for p in r)>=-20.5]
 polys=[]
 for r in rings:
     p=Polygon(r).buffer(0)
     if p.is_empty: continue
     polys.append(p)
 land=[p.simplify(0.00003) for p in polys]
-json.dump([enc(list(p.exterior.coords)) for p in land if p.geom_type=='Polygon' and not p.is_empty],open('../../data/land.json','w'),separators=(',',':'))
+json.dump([enc(list(p.exterior.coords)) for p in land if p.geom_type=='Polygon' and not p.is_empty],open('../../data/land.json','w', encoding='utf-8', newline=''),separators=(',',':'))
 print('land',os.path.getsize('../../data/land.json')//1024,'KB',len(land))
 def sample(polys,inner,outer,levels,per_area,maxn=4000):
     pts=[];all_=[]
@@ -47,5 +47,5 @@ for kind,tx,ty in [('boat',168.10,-17.50),('dolphin',168.75,-17.55),('dolphin',1
    ('boat',167.0,-15.0),('dolphin',167.7,-16.8),('fish',167.3,-16.5),('dolphin',169.6,-19.5),('ship',169.4,-19.1),('boat',166.8,-14.6),('fish',168.4,-16.6),('dolphin',168.3,-15.6),('plane',167.2,-15.6),('fish',169.1,-18.7),('boat',168.9,-18.3)]:
     p=sea(tx,ty)
     if p: cre.append([kind]+p)
-json.dump({'hills':hills,'palms':palms,'creatures':cre},open('../../data/decor.json','w'),separators=(',',':'))
+json.dump({'hills':hills,'palms':palms,'creatures':cre},open('../../data/decor.json','w', encoding='utf-8', newline=''),separators=(',',':'))
 print(os.path.getsize('../../data/decor.json')//1024,'KB',len(cre))
