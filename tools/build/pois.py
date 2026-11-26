@@ -96,3 +96,7 @@ for p in P:
     if p['id'] in HEIGHTS: p['h']=HEIGHTS[p['id']]
 for p in P: p.setdefault('isl','Efate')
 for i,p in enumerate(P,1): p['i']=i
+
+# tag museums
+for _m in P:
+    if _m['id'] in ('museum','sp_ww2_museum','efate_ww2','havannah_ww2'): _m['h']=('Museum · '+_m['h']) if _m.get('h') else 'Museum'
