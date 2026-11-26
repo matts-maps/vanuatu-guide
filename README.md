@@ -24,7 +24,9 @@ Open a command prompt in this folder.
 - The map fonts are served from `fonts/` (SIL Open Font Licence, see `fonts/OFL.txt`), so visitors do not contact Google.
 
 ## Weather
-`.github/workflows/update-weather.yml` runs every hour and runs `scripts/update_weather.py`. The script reads Open-Meteo for Port Vila, Santo and Tanna and rewrites `data/weather.json`, and the workflow commits it when it changes. GitHub switches off scheduled workflows after 60 days without repository activity, so open Actions and re-enable it if the weather bar starts showing "out of date". The guide itself marks forecasts older than three hours as out of date.
+`.github/workflows/update-weather.yml` runs every hour (GitHub can start it a few minutes late) and runs `scripts/update_weather.py`. The script reads Open-Meteo for Port Vila, Santo and Tanna. The workflow publishes the result to a separate branch called `weather-data` as a single commit that is replaced each run, so no weather history builds up. The guide reads `weather.json` from that branch and falls back to `data/weather.json` in the site if the branch cannot be reached; the newest forecast wins, and the last one seen is kept on the visitor's device for offline use.
+
+To set it up once: push this repository, open the Actions tab, choose Update weather and press Run workflow. If Settings, Actions, General, Workflow permissions is set to read-only, the workflow still works because it asks for write access itself. GitHub switches off scheduled workflows after 60 days without repository activity, so re-enable it in the Actions tab if the weather bar starts showing "out of date". The guide marks forecasts older than three hours as out of date.
 
 ## Updating the guide
 Everything lives in this repository. The build scripts and raw source data are in `tools/` (see `tools/README.md`). Change `pois.py` or `template.html` in `tools/build/`, run `python gen2.py` there, check the page, then commit and push.

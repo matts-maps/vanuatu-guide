@@ -865,8 +865,12 @@ function renderWx(){
   const stale=age>=3?' · <b class="stl">out of date</b>':'';$('wxbar').classList.toggle('stale',age>=3);
   $('wxbar').innerHTML=`<div class="wxnow"><span class="wxi">${wxIcon(cur.c)}</span><span class="tt">${cur.t==null?'--':cur.t+'°'}</span><span class="ll"><b>${esc(WDOM)}</b><small>${esc(WXN[cur.c]||cur.c)} · ${esc(sub)}</small><small>Updated ${esc(up)}${stale}</small></span></div><div class="wxdays">${days.map((d,i)=>`<div class="wxd"><b>${i?fmt(d.date):'Today'}</b><span class="wi">${wxIcon(d.condition)}</span><span>${Math.round(d.high)}°/${Math.round(d.low)}°</span><span>${d.precipitation_chance}%</span></div>`).join('')||'<div class="wxd">Forecast has run out</div>'}</div>`;
 }
+// Forecast sources: the weather-data branch (replaced hourly by the GitHub workflow), then the copy in this site. The newest wins.
+const WX_URLS=['https://raw.githubusercontent.com/matts-maps/vanuatu-guide/weather-data/weather.json','data/weather.json'];
+const wxTime=j=>Date.parse((j&&(j.updated||j.asof))||0)||0;
+try{const sv=JSON.parse(localStorage.getItem('vg-wx')||'null');if(sv&&sv.days&&sv.days.length&&wxTime(sv)>wxTime(WX))WX=sv}catch(e){} // last forecast seen, for offline use
 renderWx();
-function loadWx(){fetch('data/weather.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.days&&j.days.length){WX=j;renderWx()}}).catch(()=>{})}
+function loadWx(){Promise.all(WX_URLS.map(u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null))).then(L=>{const best=L.filter(j=>j&&j.days&&j.days.length).sort((a,b)=>wxTime(b)-wxTime(a))[0];if(best&&wxTime(best)>=wxTime(WX)){WX=best;try{localStorage.setItem('vg-wx',JSON.stringify(best))}catch(e){}renderWx()}})}
 loadWx();setInterval(loadWx,15*60*1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadWx()});
 
 // ---- your location (asked for only when you tap the button; never sent anywhere) ----

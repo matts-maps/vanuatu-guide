@@ -1,6 +1,7 @@
 """Refresh data/weather.json from Open-Meteo for Port Vila, Santo and Tanna.
 
-Runs from the repository root: python scripts/update_weather.py
+Runs from the repository root: python scripts/update_weather.py [output file]
+The output file defaults to data/weather.json.
 Uses only the Python standard library. Open-Meteo needs no key for this use
 (non-commercial, licence CC BY 4.0, credit is on the guide's information page).
 """
@@ -46,12 +47,12 @@ def main(path='data/weather.json'):
     out = {'asof': isl['Port Vila']['days'][0]['date'], 'loc': 'Port Vila',
            'cur': isl['Port Vila']['cur'], 'days': isl['Port Vila']['days'],
            'updated': now.strftime('%Y-%m-%dT%H:%M:%SZ'), 'isl': isl}
-    json.dump(out, open(path, 'w'), separators=(',', ':'))
+    json.dump(out, open(path, 'w', encoding='utf-8'), separators=(',', ':'))
     print('weather updated', out['updated'])
 
 if __name__ == '__main__':
     try:
-        main()
+        main(sys.argv[1]) if len(sys.argv) > 1 else main()
     except Exception as e:
         print('weather update failed:', e)
         sys.exit(1)

@@ -1,0 +1,35 @@
+name: Update weather
+
+# Runs every hour (GitHub may start it a few minutes late). The forecast is published to a separate
+# branch called weather-data as ONE commit that is replaced each run, so no history builds up on main
+# or on that branch. The guide reads it from there and falls back to data/weather.json.
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  weather:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch the forecast
+        run: |
+          mkdir -p "$RUNNER_TEMP/wx"
+          python scripts/update_weather.py "$RUNNER_TEMP/wx/weather.json"
+      - name: Replace the weather-data branch with a single commit
+        working-directory: ${{ runner.temp }}/wx
+        run: |
+          git init -q -b weather-data
+          git config user.name "weather-bot"
+          git config user.email "weather-bot@users.noreply.github.com"
+          git add weather.json
+          git commit -q -m "Weather $(date -u +%Y-%m-%dT%H:%MZ)"
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git push -f origin weather-data
