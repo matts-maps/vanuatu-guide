@@ -225,9 +225,6 @@ body.lview #ftog{display:none}
           <label><input type="checkbox" data-l="rivers" checked> Rivers &amp; lakes</label>
           <label><input type="checkbox" data-l="buildings" checked> Houses</label>
           <label><input type="checkbox" data-l="places" checked> Names</label>
-          <label><input type="checkbox" data-l="stays" checked> Hotels &amp; stays</label>
-          <label><input type="checkbox" data-l="trans" checked> Airports &amp; ports</label>
-          <label><input type="checkbox" data-l="routes"> Flights &amp; ferries</label>
           <label><input type="checkbox" data-l="decor" checked> Doodles</label>
         </details>
         <div class="tabs"><div><button class="tab" id="tAll" aria-selected="true">All places</button><button class="tab" id="tTrail" aria-selected="false">My trip</button></div><span class="prog" id="prog"></span><button class="near" id="near" hidden aria-pressed="false">Nearest first</button></div>
@@ -281,7 +278,7 @@ const my=lat=>{const s=Math.sin(lat*Math.PI/180);return 0.5-Math.log((1+s)/(1-s)
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 let W=800,H=600,dpr=1,cx=0,cy=0,z=10;
 const S=()=>256*Math.pow(2,z);
-const show={routes:false,trans:true,stays:true,roads:true,rivers:true,buildings:true,places:true,decor:true};
+const show={routes:false,trans:false,stays:false,roads:true,rivers:true,buildings:true,places:true,decor:true};
 // category colours (bright, kid palette)
 const CC={hist:'#8a6a2e',water:'#2f7fa6',beach:'#d99a2b',culture:'#b9553a',food:'#5f8f4a',sea:'#3a9aa8',vol:'#a63d2f',base:'#7a6a8a',events:'#b0457a'};
 Object.keys(D.cats).forEach(k=>D.cats[k].c=CC[k]||D.cats[k].c);
@@ -675,7 +672,7 @@ $('leg').innerHTML=Object.keys(D.cats).map(k=>`<div><span class="sw" style="--c:
  [LSYM('border-radius:50%;width:14px;height:14px;background:#7a4fa0;margin:1px 6px'),'Hotel, resort or guesthouse (zoom in; number is beds where known)'],
  [LSYM('border-radius:50%;width:14px;height:14px;background:#3a86a8;border:2px solid #4a3522;margin:1px 6px'),'Airport'],
  [LSYM('border-radius:50%;width:14px;height:14px;background:#2a9d8f;border:2px solid #4a3522;margin:1px 6px'),'Port or ferry wharf'],
- [LSYM('border-top:3px dashed #3a86a8;top:7px'),'Flight route (tick Flights and ferries in Map layers)'],
+ [LSYM('border-top:3px dashed #3a86a8;top:7px'),'Flight route (turn on the Flights & ferries chip)'],
  [LSYM('border-top:3px dashed #2a9d8f;top:7px'),'Ferry route, drawn around the islands'],
  [LSYM('border-radius:50%;width:14px;height:14px;background:#2f7fa6;border:3px solid #fbf3dc;box-shadow:0 0 0 2px #4a3522;margin:1px 6px'),'Your location (tap My location; it stays on your device)'],
  [LSYM('border:3px solid #c0392b;border-radius:50%;width:14px;height:14px;margin:1px 6px'),'Search result ring']
@@ -685,6 +682,9 @@ const chips=$('chips');
 const chipBtns={};
 Object.keys(D.cats).forEach(k=>{chipBtns[k]=[];[chips,$('fchips')].forEach(host=>{const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',D.cats[k].c);b.setAttribute('aria-pressed','true');
   b.innerHTML=`<i></i>${D.cats[k].n}`;b.onclick=()=>{active.has(k)?active.delete(k):active.add(k);chipBtns[k].forEach(x=>x.setAttribute('aria-pressed',active.has(k)));renderList()};host.appendChild(b);chipBtns[k].push(b)})});
+const XL=[['stays','Hotels & stays','#8a6a3a'],['trans','Airports & ports','#3a86a8'],['routes','Flights & ferries','#2a9d8f']],xBtns={};
+XL.forEach(([k,n,c])=>{xBtns[k]=[];[chips,$('fchips')].forEach(host=>{const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',c);b.setAttribute('aria-pressed','false');b.innerHTML=`<i></i>${n}`;
+  b.onclick=()=>{show[k]=!show[k];xBtns[k].forEach(x=>x.setAttribute('aria-pressed',show[k]));schedule()};host.appendChild(b);xBtns[k].push(b)})});
 const ISL=[...new Set(D.pois.map(p=>p.isl))];$('islChip').textContent=ISL.length+' islands';
 $('isl').innerHTML='<option value="">All islands</option>'+ISL.map(i=>`<option>${i}</option>`).join('');
 $('isl').onchange=e=>{islSel=e.target.value;renderList();const L=D.pois.filter(p=>!islSel||p.isl===islSel);if(!L.length)return;if(!islSel){fitTo(COUNTRY,1.14);return}const lo=L.map(p=>p.lon),la=L.map(p=>p.lat);const pw=Math.max(.05,(Math.max(...lo)-Math.min(...lo))*.3),ph=Math.max(.05,(Math.max(...la)-Math.min(...la))*.3);fitTo({w:Math.min(...lo)-pw,e:Math.max(...lo)+pw,s:Math.min(...la)-ph,n:Math.max(...la)+ph},1)};
