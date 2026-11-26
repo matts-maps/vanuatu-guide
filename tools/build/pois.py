@@ -91,7 +91,7 @@ for _q in P:
     if _q['id']=='landdive': _q['c']='events'; _q['h']='April to June, Saturdays'
 
 # heights from OpenStreetMap ele tags (vanuatu-peaks-ele.csv)
-HEIGHTS={'yasur':'361 m high','tabwemasana':'1,879 m, highest in Vanuatu','marum':'Marum 1,270 m, Benbow 1,159 m','ambae':'Lombenben 1,496 m','lopevi':'1,430 m high','gaua':'Mount Garet 797 m'}
+HEIGHTS={'yasur':'Active, erupted 2024 · 361 m high','tabwemasana':'1,879 m, highest in Vanuatu','marum':'Active, erupted 2024 · Marum 1,270 m, Benbow 1,159 m','ambae':'Active, erupted 2023 · Lombenben 1,496 m','lopevi':'Active, erupted 2007 · 1,430 m high','gaua':'Active, erupted 2022 · Mount Garet 797 m'}
 for p in P:
     if p['id'] in HEIGHTS: p['h']=HEIGHTS[p['id']]
 for p in P: p.setdefault('isl','Efate')

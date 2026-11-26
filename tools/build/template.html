@@ -393,7 +393,11 @@ function hillSym(x,y,k,seed){ctx.lineJoin='round';ctx.lineCap='round';const w=24
   for(let xx=x-w;xx<=x+w;xx+=3.4){const r=hash(xx*7.1+seed*3.3),top=y-h*(1.05-.5*Math.pow((xx-x)/w,2)*1.4)-r*3;ctx.strokeStyle=cols[(r*3)|0];ctx.beginPath();ctx.moveTo(xx,top);ctx.lineTo(xx+(r-.5)*3,top+h*(.35+.5*r));ctx.stroke()}
   ctx.restore();
   ctx.lineWidth=1.5;ctx.strokeStyle='rgba(50,100,55,.85)';ctx.beginPath();ctx.moveTo(x-w,y);ctx.quadraticCurveTo(x-w*.85,y-h*1.35,x,y-h*1.05);ctx.quadraticCurveTo(x+w*.85,y-h*1.35,x+w,y);ctx.stroke()}
-function volcanoSym(x,y,k){ctx.lineJoin='round';ctx.lineCap='round';const w=18*k,h=24*k;
+// volcano status from the Smithsonian Global Volcanism Program: a active (erupted 2000 or later), d dormant (Holocene, last erupted before 2000), e no known eruption in the last 11,700 years
+const VST={'Mount Yasur':'a','Benbow':'a','Marum':'a','Lopevi':'a','Mount Garet':'a','Lombenben - Manaro Voui':'a','Sere Timiat':'d','North Vate':'d'};
+function volcanoSym(x,y,k,st){ctx.lineJoin='round';ctx.lineCap='round';let w=18*k,h=24*k;
+  if(st==='e'){h*=.7;ctx.beginPath();ctx.moveTo(x-w,y);ctx.quadraticCurveTo(x-w*.5,y-h*1.05,x,y-h);ctx.quadraticCurveTo(x+w*.5,y-h*1.05,x+w,y);ctx.closePath();ctx.fillStyle='#a9ab8c';ctx.fill();ctx.lineWidth=1.8;ctx.strokeStyle=OUT;ctx.stroke();hatch(x+w*.15,y-h*.35,w*.8,h*.6,3);return}
+  if(st==='d'){ctx.beginPath();ctx.moveTo(x-w,y);ctx.lineTo(x-w*.28,y-h);ctx.lineTo(x+w*.28,y-h);ctx.lineTo(x+w,y);ctx.closePath();ctx.fillStyle='#b99b80';ctx.fill();ctx.lineWidth=1.8;ctx.strokeStyle=OUT;ctx.stroke();ctx.beginPath();ctx.ellipse(x,y-h,w*.28,3.2*k,0,0,7);ctx.fillStyle='#7d6f62';ctx.fill();ctx.lineWidth=1.4;ctx.stroke();hatch(x+w*.2,y-h*.35,w*.8,h*.7,4);return}
   ctx.beginPath();ctx.moveTo(x-w,y);ctx.lineTo(x-w*.28,y-h);ctx.lineTo(x+w*.28,y-h);ctx.lineTo(x+w,y);ctx.closePath();ctx.fillStyle='#c98d62';ctx.fill();ctx.lineWidth=1.8;ctx.strokeStyle=OUT;ctx.stroke();
   ctx.beginPath();ctx.ellipse(x,y-h,w*.28,3.2*k,0,0,7);ctx.fillStyle='#c8553d';ctx.fill();ctx.lineWidth=1.4;ctx.stroke();
   ctx.beginPath();ctx.moveTo(x-w*.1,y-h-3*k);ctx.quadraticCurveTo(x-w*.45,y-h-12*k,x,y-h-17*k);ctx.quadraticCurveTo(x+w*.5,y-h-24*k,x+w*.1,y-h-31*k);ctx.lineWidth=1.8;ctx.strokeStyle='rgba(74,53,34,.7)';ctx.stroke();
@@ -443,7 +447,7 @@ function draw(){
     const k=clamp(.75+(z-6)*.11,.75,1.7);ctx.textBaseline='alphabetic';
     for(const p of dec.peaks){const named=!!p[3];if(p[2]===1&&z<(named?9:10.5))continue;if(p[2]===0&&z<7)continue;
       const px=(mx(p[0])-cx)*s+ox,py=(my(p[1])-cy)*s+oy;if(px<-60||px>W+60||py<-60||py>H+60)continue;
-      if(p[2]===0)volcanoSym(px,py,k);else hillSym(px,py,k,p[0]*1000+p[1]);
+      if(p[2]===0)volcanoSym(px,py,k,VST[p[3]]||'e');else hillSym(px,py,k,p[0]*1000+p[1]);
       if(named&&z>=(p[2]===0?9.5:11)){ctx.font=`italic ${Math.round(15+k*2)}px Caveat,cursive`;const fs=Math.round(15+k*2),w=ctx.measureText(p[3]).width;ctx.lineJoin='round';ctx.lineWidth=4;ctx.strokeStyle='rgba(251,243,220,.9)';ctx.strokeText(p[3],px-w/2,py+15*k);ctx.fillStyle='#6b3a22';ctx.fillText(p[3],px-w/2,py+15*k);
         if(p[4]){const h=p[4].toLocaleString('en-GB')+' m';ctx.font=`italic ${fs-2}px Caveat,cursive`;const w2=ctx.measureText(h).width,y2=py+15*k+fs-1;ctx.strokeText(h,px-w2/2,y2);ctx.fillText(h,px-w2/2,y2)}}}
   }
@@ -669,6 +673,9 @@ document.querySelectorAll('.lay input').forEach(i=>i.onchange=()=>{show[i.datase
 // ---------- side panel ----------
 const LSYM=(css)=>`<span class="sym" style="${css}"></span>`;
 $('leg').innerHTML=Object.keys(D.cats).map(k=>`<div><span class="sw" style="--c:${D.cats[k].c}"></span>${D.cats[k].n}</div>`).join('')+'<hr>'+[
+ ['<svg width="30" height="22" viewBox="0 0 30 22" style="vertical-align:middle;margin-right:4px" stroke="#4a3522" stroke-width="1.5" stroke-linejoin="round"><path d="M3 20 11 6h8l8 14z" fill="#c98d62"/><ellipse cx="15" cy="6" rx="4" ry="2" fill="#c8553d"/><path d="M14 3c-3-2 2-3 0-5" fill="none"/></svg>','Active volcano (erupted since 2000; Smithsonian Global Volcanism Program)'],
+ ['<svg width="30" height="22" viewBox="0 0 30 22" style="vertical-align:middle;margin-right:4px" stroke="#4a3522" stroke-width="1.5" stroke-linejoin="round"><path d="M3 20 11 6h8l8 14z" fill="#b99b80"/><ellipse cx="15" cy="6" rx="4" ry="2" fill="#7d6f62"/></svg>','Dormant volcano (erupted in the last 11,700 years, not since 2000)'],
+ ['<svg width="30" height="22" viewBox="0 0 30 22" style="vertical-align:middle;margin-right:4px" stroke="#4a3522" stroke-width="1.5" stroke-linejoin="round"><path d="M3 20Q9 7 15 8Q21 7 27 20z" fill="#a9ab8c"/></svg>','Extinct volcano (no known eruption in 11,700 years)'],
  [LSYM('border-radius:50%;width:14px;height:14px;background:#7a4fa0;margin:1px 6px'),'Hotel, resort or guesthouse (zoom in; number is beds where known)'],
  [LSYM('border-radius:50%;width:14px;height:14px;background:#3a86a8;border:2px solid #4a3522;margin:1px 6px'),'Airport'],
  [LSYM('border-radius:50%;width:14px;height:14px;background:#2a9d8f;border:2px solid #4a3522;margin:1px 6px'),'Port or ferry wharf'],
@@ -731,7 +738,7 @@ function searchAll(term){
   STAYS.forEach(p=>add(p[0],p[1],p[2],p[3],16.2,()=>setTimeout(()=>{const s=S();showStip(p,(mx(p[2])-cx)*s+W/2,(my(p[3])-cy)*s+H/2)},950)));
   TRANS.forEach(p=>add(p[0],p[1],p[2],p[3],p[1]==='Airport'?13:15.5,()=>setTimeout(()=>{const s=S();showStip(p,(mx(p[2])-cx)*s+W/2,(my(p[3])-cy)*s+H/2)},950)));
   const P=store['places.json'];if(P)P.forEach(p=>add(p[0],PCLS[p[1]]||'Place',p[2],p[3],p[1]===4?((p[4]||0)>0.06?8.5:11):p[1]<=1?13:14.5));
-  const dc=store['decor.json'];if(dc&&dc.peaks)dc.peaks.forEach(p=>add(p[3],(p[2]===0?'Volcano':'Peak')+(p[4]?' · '+p[4].toLocaleString('en-GB')+' m':''),p[0],p[1],13));
+  const dc=store['decor.json'];if(dc&&dc.peaks)dc.peaks.forEach(p=>add(p[3],(p[2]===0?({a:'Active volcano',d:'Dormant volcano'}[VST[p[3]]]||'Extinct volcano'):'Peak')+(p[4]?' · '+p[4].toLocaleString('en-GB')+' m':''),p[0],p[1],13));
   out.sort((a,b)=>a.rank-b.rank||a.name.length-b.name.length);
   const keep=[];out.forEach(r=>{const key=norm(r.name.replace(/\(.*?\)/g,'')).replace(/\s+/g,' ').trim();
     if(keep.some(k=>k.key===key&&Math.abs(k.r.lon-r.lon)<.06&&Math.abs(k.r.lat-r.lat)<.06))return;keep.push({key,r})});
