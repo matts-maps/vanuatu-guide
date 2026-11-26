@@ -4,8 +4,10 @@ Run from tools/build:  python make_artifact.py
 The repository root is the hosted site (GitHub Pages) and is the source of truth.
 The artifact copy differs in one line only: the weather credit on data-sources.html,
 which names Open-Meteo on the hosted site and says "an online weather service" in the artifact.
-Writes artifact/index.html and artifact/data-sources.html. Publish just those two files in
-patch mode and never overwrite data/weather.json (the hourly task refreshes it).
+Writes artifact/index.html and artifact/data-sources.html. Publish those two files plus the
+six files in ../../fonts/ (as fonts/...) in patch mode, and never overwrite data/weather.json (the hourly
+task refreshes it). The artifact has no sw.js, manifest or icons, which is fine: the page ignores a
+missing service worker.
 """
 import os, shutil
 root, dst = '../..', 'artifact'
