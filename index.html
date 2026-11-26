@@ -599,7 +599,8 @@ function updatePins(s,ox,oy){
   const hit=(r)=>rects.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]);
   singles.forEach(a=>{
     const e=pinEls[a.p.id],nm=e.querySelector('.nm');if(a.x<-60||a.x>W+60||a.y<-60||a.y>H+60)return;
-    const named=z>=11.8||sel===a.p.id;nm.style.display=named?'':'none';
+    const named=(z>=11.8&&!matchMedia('(max-width:600px)').matches)||sel===a.p.id; // phones: numbers only until a place is tapped or searched for
+    nm.style.display=named?'':'none';
     const w=named?Math.min(52+a.p.n.length*7,40+190):36,h=30;
     const cands=[[20,-44],[20,14],[-20-w,-44],[-20-w,14],[-w/2,-58],[-w/2,28],[34,-15],[-34-w,-15]];
     let best=null;for(const [dx,dy] of cands){const r=[a.x+dx,a.y+dy,a.x+dx+w,a.y+dy+h];if(r[0]<2||r[2]>W-2||r[1]<2||r[3]>H-2)continue;if(!hit(r)){best=[dx,dy,r];break}}
