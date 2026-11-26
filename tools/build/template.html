@@ -126,7 +126,20 @@ a{color:var(--red-d)}
 .foot{grid-area:foot;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:4px 14px;padding:4px 16px;background:var(--ink);color:var(--paper);border-top:4px solid var(--sun);font-size:15px;text-align:center}
 .foot a{color:var(--sun);display:inline-flex;align-items:center;min-height:44px;padding:0 4px}
 .foot a:hover{color:#fff}
-@media (max-width:600px){.ctl{display:flex;flex-wrap:nowrap;gap:5px;right:8px;top:8px}.ctl button{width:38px;height:38px;font-size:20px;box-shadow:2px 2px 0 var(--ink)}.ctl button.w{height:38px;padding:0 8px;font-size:14px}.stage{height:clamp(300px,54dvh,720px)!important}}
+@media (max-width:600px){.ctl{display:flex;flex-wrap:nowrap;gap:5px;right:8px;top:8px}.ctl button{width:38px;height:38px;font-size:20px;box-shadow:2px 2px 0 var(--ink)}.ctl button.w{height:38px;padding:0 8px;font-size:14px}}
+#vtog{display:none}
+@media (max-width:600px) and (orientation:portrait){
+#vtog{display:inline-flex;align-items:center;justify-content:center;position:fixed;z-index:4;min-height:44px;padding:0 18px;border:2px solid var(--ink);border-radius:22px;background:var(--paper);color:var(--ink);font-family:var(--f-display);font-size:18px;box-shadow:3px 3px 0 var(--ink)}
+#vtog:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+body.mview .app{height:100vh;height:100dvh;overflow:hidden}
+body.mview .stage{position:relative;top:auto;z-index:auto;flex:1 1 0;min-height:0;height:auto!important;border-bottom:0}
+body.mview .side,body.mview .foot{display:none}
+body.mview #vtog{left:12px;bottom:calc(52px + env(safe-area-inset-bottom,0px))}
+body.lview .stage{display:none}
+body.lview .side{min-height:100dvh}
+body.lview .app{padding-bottom:72px}
+body.lview #vtog{left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+}
 @media (orientation:portrait){.foot{order:5;padding-bottom:max(4px,env(safe-area-inset-bottom,0px))}}
 
 /* tap targets and print */
@@ -150,7 +163,7 @@ a{color:var(--red-d)}
 @media print{body>*:not(#itin){display:none!important}#itin{position:static!important;overflow:visible!important}.itwrap>*:not(#itpr){display:none!important}#itpr{display:block!important;font:14px/1.45 Georgia,serif;color:#000}#itpr h1{font-size:22px}#itpr li{margin:0 0 8px;break-inside:avoid}#itpr small{color:#444}}
 </style>
 </head>
-<body>
+<body class="mview">
 <div class="app">
   <header class="head">
     <svg class="badge" viewBox="0 0 100 100" role="img" aria-label="Port Vila badge">
@@ -226,6 +239,7 @@ a{color:var(--red-d)}
   <footer class="foot"><span>Created by <a href="https://matts-maps.github.io/portfolio/" target="_blank" rel="noopener">Fantail GIS</a> (2026)</span><span aria-hidden="true">·</span><a href="data-sources.html">Data sources</a></footer>
 </div>
 
+<button id="vtog" type="button" aria-label="Switch between the map and the list of places">Show list</button>
 <section id="itin" hidden aria-label="Itinerary"><div class="itwrap"><div class="ithead"><h1>My itinerary</h1><button class="btn" id="itClose">Back to the map</button></div><div class="note" id="itcount"></div><div id="itlist"></div>
 <div class="acts2"><a class="btn pri" id="itGmap" target="_blank" rel="noopener" href="#">Route in Google Maps</a><button class="btn" id="itCsv">Save as CSV (spreadsheet)</button><button class="btn" id="itGpx">Save GPX for a phone app (zip)</button><button class="btn" id="itHtml">Save printable page</button><button class="btn" id="itPrint">Print</button></div><div id="itmsg" role="status"></div><div id="itpr"></div></div></section>
 <script>
@@ -610,7 +624,8 @@ function flyTo(tx,ty,tz){fly={t0:performance.now(),sx:cx,sy:cy,sz:z,tx,ty,tz};st
 function stepFly(){if(!fly)return;const t=clamp((performance.now()-fly.t0)/550,0,1),e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
   cx=fly.sx+(fly.tx-fly.sx)*e;cy=fly.sy+(fly.ty-fly.sy)*e;z=fly.sz+(fly.tz-fly.sz)*e;limit();draw();if(t<1)requestAnimationFrame(stepFly);else fly=null}
 function zoomAbout(px,py,nz){const s0=S();const wx=cx+(px-W/2)/s0,wy=cy+(py-H/2)/s0;z=clamp(nz,minZ(),18);const s1=S();cx=wx-(px-W/2)/s1;cy=wy-(py-H/2)/s1;limit();schedule()}
-function resize(){const r=stage.getBoundingClientRect();W=Math.max(200,r.width);H=Math.max(200,r.height);dpr=Math.min(2,window.devicePixelRatio||1);cv.width=W*dpr;cv.height=H*dpr;seaPat=null;landPat=null;limit();schedule()}
+function resize(){const r=stage.getBoundingClientRect();if(!r.width||!r.height)return; // map hidden while the phone shows the list
+  W=Math.max(200,r.width);H=Math.max(200,r.height);dpr=Math.min(2,window.devicePixelRatio||1);cv.width=W*dpr;cv.height=H*dpr;seaPat=null;landPat=null;limit();schedule()}
 new ResizeObserver(resize).observe(stage);
 const ptrs=new Map();
 stage.addEventListener('pointerdown',e=>{if(e.target.closest('.card,.ctl,.legend'))return;fly=null;stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);stage.style.cursor='grabbing'});
@@ -687,7 +702,7 @@ function searchAll(term){
   return keep.map(k=>k.r).slice(0,9);
 }
 const sres=$('sres');let sList=[];
-function pick(r){sres.hidden=true;stage.scrollIntoView&&0;if(r.type!=='Guide place'){hl=[r.lon,r.lat];flyTo(mx(r.lon),my(r.lat),Math.max(r.zz,Math.min(z,r.zz+1)));}r.act&&r.act();schedule()}
+function pick(r){sres.hidden=true;showMap();stage.scrollIntoView&&0;if(r.type!=='Guide place'){hl=[r.lon,r.lat];flyTo(mx(r.lon),my(r.lat),Math.max(r.zz,Math.min(z,r.zz+1)));}r.act&&r.act();schedule()}
 function showRes(){const term=$('q').value;if(norm(term.trim()).length<2){sres.hidden=true;return}
   sList=searchAll(term);sres.innerHTML=sList.length?'':'<div class="none">No match on the map. Try another spelling.</div>';
   sList.forEach(r=>{const b=document.createElement('button');b.type='button';b.innerHTML='<span></span><small></small>';b.firstChild.textContent=r.name;b.lastChild.textContent=r.type;b.onclick=()=>pick(r);sres.appendChild(b)});sres.hidden=false}
@@ -697,9 +712,13 @@ sres.addEventListener('keydown',e=>{const bs=[...sres.querySelectorAll('button')
 document.addEventListener('pointerdown',e=>{if(!e.target.closest('.sw2'))sres.hidden=true});
 function select(id,fl){
   sel=id;const p=D.pois.find(x=>x.id===id);card(p);renderList();renderRing();
-  if(p&&fl)flyTo(mx(p.lon),my(p.lat),Math.max(z,13.2));
+  if(p&&fl){showMap();flyTo(mx(p.lon),my(p.lat),Math.max(z,13.2))}
 }
 
+// phone: start on the map, with a button to switch to the list of places (and back)
+function setView(v){const b=document.body;b.classList.toggle('mview',v==='map');b.classList.toggle('lview',v==='list');b.classList.remove('compact');$('vtog').textContent=v==='map'?'Show list':'Show map';window.scrollTo(0,0);if(v==='map')requestAnimationFrame(resize)}
+function showMap(){if(document.body.classList.contains('lview'))setView('map')}
+$('vtog').onclick=()=>setView(document.body.classList.contains('mview')?'list':'map');
 window.addEventListener('scroll',()=>{document.body.classList.toggle('compact',window.scrollY>140)},{passive:true});
 // ---- itinerary page and export ----
 const trailPois=()=>[...saved].map(id=>D.pois.find(p=>p.id===id)).filter(Boolean);
@@ -769,7 +788,7 @@ const PLANS={
  ['Late afternoon','yasur','Time the Mount Yasur crater visit for dusk, when the glow is best. Take a torch, water and warm layers, and follow your guide at all times.']]}};
 let planKey='efate';
 function steps(){return PLANS[planKey].steps}
-function renderRing(){const el=$('ringlist');el.innerHTML='';$('plandesc').textContent=PLANS[planKey].desc;const ps=$('plansel');ps.innerHTML='';Object.keys(PLANS).forEach(k=>{const b=document.createElement('button');b.textContent=PLANS[k].name;b.setAttribute('aria-pressed',k===planKey);b.onclick=()=>{planKey=k;renderRing();const f=PLANS[k].steps[0][1],p=D.pois.find(x=>x.id===f);p&&flyTo(mx(p.lon),my(p.lat),11)};ps.appendChild(b)});steps().forEach(([t,id,txt])=>{const p=D.pois.find(x=>x.id===id);const b=document.createElement('button');b.className='it';b.style.setProperty('--c',D.cats[p.c].c);if(sel===id)b.setAttribute('aria-current','true');
+function renderRing(){const el=$('ringlist');el.innerHTML='';$('plandesc').textContent=PLANS[planKey].desc;const ps=$('plansel');ps.innerHTML='';Object.keys(PLANS).forEach(k=>{const b=document.createElement('button');b.textContent=PLANS[k].name;b.setAttribute('aria-pressed',k===planKey);b.onclick=()=>{planKey=k;renderRing();const f=PLANS[k].steps[0][1],p=D.pois.find(x=>x.id===f);p&&(showMap(),flyTo(mx(p.lon),my(p.lat),11))};ps.appendChild(b)});steps().forEach(([t,id,txt])=>{const p=D.pois.find(x=>x.id===id);const b=document.createElement('button');b.className='it';b.style.setProperty('--c',D.cats[p.c].c);if(sel===id)b.setAttribute('aria-current','true');
   b.innerHTML=`<span class="num">${p.i}</span><span><span class="tm">${t}</span><b>${esc(p.n)}</b><small>${esc(txt)}</small></span><span></span>`;b.onclick=()=>select(id,true);el.appendChild(b)})}
 // modes
 document.querySelectorAll('.modebar button').forEach(b=>b.onclick=()=>{const m=b.dataset.mode;document.querySelectorAll('.modebar button').forEach(x=>x.setAttribute('aria-pressed',x===b));
