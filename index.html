@@ -127,18 +127,29 @@ a{color:var(--red-d)}
 .foot a{color:var(--sun);display:inline-flex;align-items:center;min-height:44px;padding:0 4px}
 .foot a:hover{color:#fff}
 @media (max-width:600px){.ctl{display:flex;flex-wrap:nowrap;gap:5px;right:8px;top:8px}.ctl button{width:38px;height:38px;font-size:20px;box-shadow:2px 2px 0 var(--ink)}.ctl button.w{height:38px;padding:0 8px;font-size:14px}}
-#vtog{display:none}
+#vbar{display:none}
+.fsheet[hidden]{display:none}
+.fsheet{position:absolute;left:8px;right:8px;bottom:8px;z-index:12;max-height:72%;overflow:auto;background:var(--paper);border:2px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:10px 12px 12px}
+.fsheet .fh{display:flex;align-items:center;justify-content:space-between;font-family:var(--f-display);font-size:20px}
+.fsheet .fx{width:44px;height:44px;border:2px solid var(--ink);border-radius:50%;background:var(--paper);font-size:22px;line-height:1}
+.fsheet .fnote{margin:2px 0 8px;color:var(--muted);font-size:15px}
+.fchips{display:flex;flex-wrap:wrap;gap:6px}
+.fkey{margin-top:10px;border-top:1px dashed var(--line);padding-top:6px;font-size:15px}
+.fkey .row{display:flex;align-items:center;gap:8px;margin:4px 0}
+.fkey .sym{width:26px;height:16px;flex:none;display:inline-block;position:relative}
 @media (max-width:600px) and (orientation:portrait){
-#vtog{display:inline-flex;align-items:center;justify-content:center;position:fixed;z-index:4;min-height:44px;padding:0 18px;border:2px solid var(--ink);border-radius:22px;background:var(--paper);color:var(--ink);font-family:var(--f-display);font-size:18px;box-shadow:3px 3px 0 var(--ink)}
-#vtog:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+#vbar{display:flex;gap:8px;position:fixed;z-index:4}
+#vtog,#ftog{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border:2px solid var(--ink);border-radius:22px;background:var(--paper);color:var(--ink);font-family:var(--f-display);font-size:18px;box-shadow:3px 3px 0 var(--ink)}
+#vtog:active,#ftog:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 body.mview .app{height:100vh;height:100dvh;overflow:hidden}
 body.mview .stage{position:relative;top:auto;z-index:auto;flex:1 1 0;min-height:0;height:auto!important;border-bottom:0}
 body.mview .side,body.mview .foot{display:none}
-body.mview #vtog{left:12px;bottom:calc(52px + env(safe-area-inset-bottom,0px))}
+body.mview #vbar{left:12px;bottom:calc(52px + env(safe-area-inset-bottom,0px))}
 body.lview .stage{display:none}
 body.lview .side{min-height:100dvh}
 body.lview .app{padding-bottom:72px}
-body.lview #vtog{left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+body.lview #vbar{left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+body.lview #ftog{display:none}
 }
 @media (orientation:portrait){.foot{order:5;padding-bottom:max(4px,env(safe-area-inset-bottom,0px))}}
 
@@ -231,6 +242,7 @@ body.lview #vtog{left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe
     
     <div class="status" id="status">Loading…</div>
     <div class="ctl"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zefate" class="w" aria-label="Fit Efate">Efate</button><button id="zall" class="w" aria-label="Fit Vanuatu">All</button><button id="zloc" class="w" aria-label="Show my location on the map">My location</button></div>
+    <div class="fsheet" id="fsheet" role="dialog" aria-label="Filter and key" hidden><div class="fh"><b>Filter and key</b><button class="fx" id="fclose" type="button" aria-label="Close">×</button></div><p class="fnote">Tap a colour to show or hide that kind of place on the map.</p><div class="fchips" id="fchips"></div><div class="fkey" id="fkey"></div></div>
     <div class="legend"><details><summary>What's on the map</summary><div id="leg"></div><div class="note">Drawn by hand, not to scale. Zoom in for real roads, rivers and houses.</div></details></div>
     <article class="card" id="card" hidden></article>
     <div class="scale" id="scale"></div>
@@ -239,7 +251,7 @@ body.lview #vtog{left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe
   <footer class="foot"><span>Created by <a href="https://matts-maps.github.io/portfolio/" target="_blank" rel="noopener">Fantail GIS</a> (2026)</span><span aria-hidden="true">·</span><a href="data-sources.html">Data sources</a></footer>
 </div>
 
-<button id="vtog" type="button" aria-label="Switch between the map and the list of places">Show list</button>
+<div id="vbar"><button id="vtog" type="button" aria-label="Switch between the map and the list of places">Show list</button><button id="ftog" type="button" aria-expanded="false" aria-controls="fsheet">Filter</button></div>
 <section id="itin" hidden aria-label="Itinerary"><div class="itwrap"><div class="ithead"><h1>My itinerary</h1><button class="btn" id="itClose">Back to the map</button></div><div class="note" id="itcount"></div><div id="itlist"></div>
 <div class="acts2"><a class="btn pri" id="itGmap" target="_blank" rel="noopener" href="#">Route in Google Maps</a><button class="btn" id="itCsv">Save as CSV (spreadsheet)</button><button class="btn" id="itGpx">Save GPX for a phone app (zip)</button><button class="btn" id="itHtml">Save printable page</button><button class="btn" id="itPrint">Print</button></div><div id="itmsg" role="status"></div><div id="itpr"></div></div></section>
 <script>
@@ -520,7 +532,7 @@ function drawStays(s,ox,oy){
 }
 let tdown=null;const stip=document.createElement('div');stip.className='stip';stip.hidden=true;stage.appendChild(stip);
 stage.addEventListener('pointerdown',e=>{tdown=[e.clientX,e.clientY];stip.hidden=true;hl=null},true);
-stage.addEventListener('pointerup',e=>{if(!tdown||!(show.stays||show.trans))return;const mv=Math.hypot(e.clientX-tdown[0],e.clientY-tdown[1]);tdown=null;if(mv>6||e.target.closest('.card,.ctl,.legend,.pin,.wx,.wxp,.stip'))return;
+stage.addEventListener('pointerup',e=>{if(!tdown||!(show.stays||show.trans))return;const mv=Math.hypot(e.clientX-tdown[0],e.clientY-tdown[1]);tdown=null;if(mv>6||e.target.closest('.card,.ctl,.legend,.fsheet,.pin,.wx,.wxp,.stip'))return;
   const r=stage.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let best=null,bd=18;for(const h of stayHit.concat(show.trans?transHit:[])){const d=Math.hypot(h[0]-x,h[1]-y);if(d<bd){bd=d;best=h}}
   if(!best)return;showStip(best[2],best[0],best[1])});
 function showStip(p,x,y){const r=stage.getBoundingClientRect();stip.innerHTML=`<b>${esc(p[0])}</b><small>${esc(p[1])} · from ${esc(p[4]||'OpenStreetMap')}</small><a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${p[3]},${p[2]}&travelmode=driving">Directions in Google Maps</a>`;stip.style.left=Math.min(Math.max(x,120),r.width-120)+'px';stip.style.top=Math.max(y,70)+'px';stip.hidden=false}
@@ -629,7 +641,7 @@ function resize(){const r=stage.getBoundingClientRect();if(!r.width||!r.height)r
   W=Math.max(200,r.width);H=Math.max(200,r.height);dpr=Math.min(2,window.devicePixelRatio||1);cv.width=W*dpr;cv.height=H*dpr;seaPat=null;landPat=null;limit();schedule()}
 new ResizeObserver(resize).observe(stage);
 const ptrs=new Map();
-stage.addEventListener('pointerdown',e=>{if(e.target.closest('.card,.ctl,.legend'))return;fly=null;stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);stage.style.cursor='grabbing'});
+stage.addEventListener('pointerdown',e=>{if(e.target.closest('.card,.ctl,.legend,.fsheet'))return;fly=null;stage.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);stage.style.cursor='grabbing'});
 stage.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;const prev=ptrs.get(e.pointerId);const cur=[e.clientX,e.clientY];
   if(ptrs.size===1){cx-=(cur[0]-prev[0])/S();cy-=(cur[1]-prev[1])/S();limit();schedule()}
   else if(ptrs.size===2){const o=[...ptrs.entries()].find(([id])=>id!==e.pointerId)[1];const d0=Math.hypot(prev[0]-o[0],prev[1]-o[1]),d1=Math.hypot(cur[0]-o[0],cur[1]-o[1]);
@@ -652,9 +664,11 @@ $('leg').innerHTML=Object.keys(D.cats).map(k=>`<div><span class="sw" style="--c:
  [LSYM('border-radius:50%;width:14px;height:14px;background:#2f7fa6;border:3px solid #fbf3dc;box-shadow:0 0 0 2px #4a3522;margin:1px 6px'),'Your location (tap My location; it stays on your device)'],
  [LSYM('border:3px solid #c0392b;border-radius:50%;width:14px;height:14px;margin:1px 6px'),'Search result ring']
 ].map(([sy,t])=>`<div class="row">${sy}<span>${t}</span></div>`).join('');
+$('fkey').innerHTML=$('leg').innerHTML.split('<hr>')[1];
 const chips=$('chips');
-Object.keys(D.cats).forEach(k=>{const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',D.cats[k].c);b.setAttribute('aria-pressed','true');
-  b.innerHTML=`<i></i>${D.cats[k].n}`;b.onclick=()=>{active.has(k)?active.delete(k):active.add(k);b.setAttribute('aria-pressed',active.has(k));renderList()};chips.appendChild(b)});
+const chipBtns={};
+Object.keys(D.cats).forEach(k=>{chipBtns[k]=[];[chips,$('fchips')].forEach(host=>{const b=document.createElement('button');b.className='chip';b.style.setProperty('--c',D.cats[k].c);b.setAttribute('aria-pressed','true');
+  b.innerHTML=`<i></i>${D.cats[k].n}`;b.onclick=()=>{active.has(k)?active.delete(k):active.add(k);chipBtns[k].forEach(x=>x.setAttribute('aria-pressed',active.has(k)));renderList()};host.appendChild(b);chipBtns[k].push(b)})});
 const ISL=[...new Set(D.pois.map(p=>p.isl))];$('islChip').textContent=ISL.length+' islands';
 $('isl').innerHTML='<option value="">All islands</option>'+ISL.map(i=>`<option>${i}</option>`).join('');
 $('isl').onchange=e=>{islSel=e.target.value;renderList();const L=D.pois.filter(p=>!islSel||p.isl===islSel);if(!L.length)return;if(!islSel){fitTo(COUNTRY,1.14);return}const lo=L.map(p=>p.lon),la=L.map(p=>p.lat);const pw=Math.max(.05,(Math.max(...lo)-Math.min(...lo))*.3),ph=Math.max(.05,(Math.max(...la)-Math.min(...la))*.3);fitTo({w:Math.min(...lo)-pw,e:Math.max(...lo)+pw,s:Math.min(...la)-ph,n:Math.max(...la)+ph},1)};
@@ -717,8 +731,10 @@ function select(id,fl){
 }
 
 // phone: start on the map, with a button to switch to the list of places (and back)
-function setView(v){const b=document.body;b.classList.toggle('mview',v==='map');b.classList.toggle('lview',v==='list');b.classList.remove('compact');$('vtog').textContent=v==='map'?'Show list':'Show map';window.scrollTo(0,0);if(v==='map')requestAnimationFrame(resize)}
+function setView(v){setSheet(false);const b=document.body;b.classList.toggle('mview',v==='map');b.classList.toggle('lview',v==='list');b.classList.remove('compact');$('vtog').textContent=v==='map'?'Show list':'Show map';window.scrollTo(0,0);if(v==='map')requestAnimationFrame(resize)}
 function showMap(){if(document.body.classList.contains('lview'))setView('map')}
+function setSheet(o){$('fsheet').hidden=!o;$('ftog').setAttribute('aria-expanded',o);$('ftog').textContent=o?'Hide filter':'Filter'}
+$('ftog').onclick=()=>setSheet($('fsheet').hidden);$('fclose').onclick=()=>setSheet(false);
 $('vtog').onclick=()=>setView(document.body.classList.contains('mview')?'list':'map');
 window.addEventListener('scroll',()=>{document.body.classList.toggle('compact',window.scrollY>140)},{passive:true});
 // ---- itinerary page and export ----
